@@ -1,10 +1,12 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
+import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -106,6 +108,8 @@ public class CalendarViewController {
     private Button prev_month_button;
     @FXML
     private Button next_month_button;
+    @FXML
+    private TableViewController tableViewController;
 
     public CalendarViewController() {
         gridButtons = new ArrayList<>();
@@ -120,7 +124,7 @@ public class CalendarViewController {
         gridButtons.add(List.of(day_button_3_0, day_button_3_1, day_button_3_2, day_button_3_3, day_button_3_4, day_button_3_5, day_button_3_6));
         gridButtons.add(List.of(day_button_4_0, day_button_4_1, day_button_4_2, day_button_4_3, day_button_4_4, day_button_4_5, day_button_4_6));
         gridButtons.add(List.of(day_button_5_0, day_button_5_1, day_button_5_2, day_button_5_3, day_button_5_4, day_button_5_5, day_button_5_6));
-        setButtonNamesForMonthYear(calendar);
+        setButtonNamesForMonthYear();
         updateMonthYearLabel();
     }
 
@@ -136,7 +140,7 @@ public class CalendarViewController {
             calendar.set(calendar.get(Calendar.YEAR) + 1, Calendar.JANUARY, calendar.get(Calendar.DAY_OF_MONTH));
         else
             calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
-        setButtonNamesForMonthYear(calendar);
+        setButtonNamesForMonthYear();
         updateMonthYearLabel();
     }
 
@@ -146,7 +150,7 @@ public class CalendarViewController {
             calendar.set(calendar.get(Calendar.YEAR) - 1, Calendar.DECEMBER, calendar.get(Calendar.DAY_OF_MONTH));
         else
             calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) - 1, calendar.get(Calendar.DAY_OF_MONTH));
-        setButtonNamesForMonthYear(calendar);
+        setButtonNamesForMonthYear();
         updateMonthYearLabel();
     }
 
@@ -155,9 +159,10 @@ public class CalendarViewController {
         System.out.println("Button pressed");
         LocalDate date = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, Integer.parseInt(((Button)event.getSource()).getText()));
         System.out.println("REST petition with date " + date);
+        tableViewController.setDate(date);
     }
 
-    private void setButtonNamesForMonthYear(Calendar calendar) {
+    private void setButtonNamesForMonthYear() {
         gridButtons.forEach(l -> l.forEach(b -> {
             b.setText("");
             b.setDisable(true);
@@ -175,13 +180,16 @@ public class CalendarViewController {
             }
             for (int j = firstDayIndex; j <= lastDayIndex; j++) {
                 gridButtons.get(i).get(j).setText(day + "");
-                if (
-                        (day >= calendar.get(Calendar.DAY_OF_MONTH)
-                                && calendar.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH)
-                                && calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)
-                        )
-                                || calendar.getTime().after(Calendar.getInstance().getTime()))
-                    gridButtons.get(i).get(j).setDisable(false);
+                gridButtons.get(i).get(j).setDisable(false);
+
+//          this if statement enables only buttons that are present day or future
+//                if (
+//                        (day >= calendar.get(Calendar.DAY_OF_MONTH)
+//                            && calendar.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH)
+//                            && calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)
+//                        )
+//                                || calendar.getTime().after(Calendar.getInstance().getTime()))
+//                    gridButtons.get(i).get(j).setDisable(false);
                 day++;
             }
         }
@@ -209,5 +217,9 @@ public class CalendarViewController {
         firstDayOfMonth.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
         if (firstDayOfMonth.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) return 6;
         else return firstDayOfMonth.get(Calendar.DAY_OF_WEEK) - 2;
+    }
+
+    public void setTableViewController(TableViewController tableViewController) {
+        this.tableViewController = tableViewController;
     }
 }

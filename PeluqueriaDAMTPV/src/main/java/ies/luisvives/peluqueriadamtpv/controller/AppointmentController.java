@@ -28,6 +28,7 @@ public class AppointmentController {
     protected void initialize() {
         tableViewController.setSearchQuery("");
         tableViewController.setEntityForTable(TableViewController.APPOINTMENT);
+        calendarViewController.setTableViewController(tableViewController);
     }
 
     public void setSearchQuery(String searchQuery) {

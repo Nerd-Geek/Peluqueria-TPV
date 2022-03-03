@@ -12,8 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import retrofit2.Response;
@@ -21,6 +19,7 @@ import retrofit2.Response;
 import javax.security.auth.callback.Callback;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -49,14 +48,20 @@ public class TableViewController implements Initializable, Callback {
     @FXML
     private Button details_button;
     @FXML
-    private Button modify_button;
+    private Button view_all;
     @FXML
     private Button delete_button;
 
 	private String searchQuery;
 
+    private String serviceId;
+
+    private LocalDate date;
+
 	public TableViewController() {
 		searchQuery = "";
+        serviceId = null;
+        date = null;
         elements = new ArrayList<>();
         column1 = new TableColumn<>();
         column2 = new TableColumn<>();
@@ -80,35 +85,48 @@ public class TableViewController implements Initializable, Callback {
     }
 
     @FXML
+    public void viewAll() {
+        date = null;
+        searchQuery = "";
+        serviceId = null;
+        refreshTable();
+    }
+
+    @FXML
     public void delete(ActionEvent e) {
         if (table.getSelectionModel().getSelectedCells().size() == 1) {
-            confirmDeleteDialog();
-            String elementId = table.getItems().get(table.getSelectionModel().getFocusedIndex()).getId();
-            try {
-                switch(type) {
-                    case APPOINTMENT:
-                        APIRestConfig.getAppointmentsService().deleteAppointmentById(elementId).execute();
-                        break;
-                    case USER:
-                        APIRestConfig.getUsersService().deleteUser(elementId).execute();
-                        break;
-                    case SERVICE:
-                        APIRestConfig.getServicesService().deleteService(elementId).execute();
-                        break;
+            if (confirmDeleteDialog()) {
+                String elementId = table.getItems().get(table.getSelectionModel().getFocusedIndex()).getId();
+                try {
+                    switch (type) {
+                        case APPOINTMENT:
+                            APIRestConfig.getAppointmentsService().deleteAppointmentById(elementId).execute();
+                            break;
+                        case USER:
+                            APIRestConfig.getUsersService().deleteUser(elementId).execute();
+                            break;
+                        case SERVICE:
+                            APIRestConfig.getServicesService().deleteService(elementId).execute();
+                            break;
+                    }
+                    table.getItems().remove(table.getSelectionModel().getFocusedIndex());
+                    deleteDoneDialog();
+                } catch (IOException ioException) {
+                    System.err.println("Delete not done");
                 }
-                table.getItems().remove(table.getSelectionModel().getFocusedIndex());
-                deleteDoneDialog();
-            } catch (IOException ioException) {
-                System.err.println("Delete not done");
             }
         }
     }
 
-    private void confirmDeleteDialog() {
+    private boolean confirmDeleteDialog() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Borrado");
         alert.setContentText("Desea borrar?");
         alert.showAndWait();
+        if (alert.getResult().getButtonData().isDefaultButton())
+            return true;
+        else
+            return false;
     }
 
     private void deleteDoneDialog() {
@@ -138,6 +156,15 @@ public class TableViewController implements Initializable, Callback {
 		this.searchQuery = searchQuery;
         refreshTable();
 	}
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+        refreshTable();
+    }
+
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
+    }
 
 	public void refreshTable() {
         switch(this.type) {
@@ -174,7 +201,8 @@ public class TableViewController implements Initializable, Callback {
 
     private void updateAppointmentItems() {
         try {
-            Response<List<Appointment>> response = APIRestConfig.getAppointmentsService().appointmentGetAllWithUser_Username(searchQuery).execute();
+            Response<List<Appointment>> response = APIRestConfig.getAppointmentsService()
+                    .appointmentFindByDateAndUser_UsernameContainsIgnoreCaseAndService_Id(searchQuery, date, serviceId).execute();
             if (response.body() != null) {
                 AppointmentListMapper mapper = new AppointmentListMapper();
                 ObservableList<TableEntity> appointments =
