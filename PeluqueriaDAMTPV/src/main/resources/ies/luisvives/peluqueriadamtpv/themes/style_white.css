@@ -53,13 +53,13 @@
     -fx-icon-color: #ffca3c;
 }
 
-.toggle-button:selected {
-    -fx-background-color: #434659;
+.toggle-button:disabled{
+    -fx-background-color: #5d6380;
     -fx-border-style: solid;
-    -fx-border-color: #a17c28;
+    -fx-border-color: #e2b33b;
     -fx-border-width: 0px 0px 0px 12px;
     -fx-alignment: center;
-    -fx-text-fill: #ffca3c;
+    -fx-text-fill: #ffd563;
 }
 
 .toggle-button:selected > .FontIcon {
