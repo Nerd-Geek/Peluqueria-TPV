@@ -52,7 +52,8 @@
                         </HBox>
                         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                            <children>
-                              <Button fx:id="create_appointment_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%text.createAppointment" VBox.vgrow="ALWAYS">
+                              <Button fx:id="create_appointment_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%text.createAppointment" VBox.vgrow="ALWAYS"
+                              onAction="#createAppointment">
                                  <VBox.margin>
                                     <Insets top="10.0" />
                                  </VBox.margin>
