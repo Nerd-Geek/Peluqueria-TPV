@@ -1,17 +1,17 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
-import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-import java.io.IOException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 public class CalendarViewController {
     private Calendar calendar;
