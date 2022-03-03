@@ -11,6 +11,10 @@ public interface RestApiUsers {
     @GET("users")
     Call<List<User>> usersGetAll();
 
+
+    @GET("users")
+    Call<List<User>> userGetAllWithUser_name(@Query("searchQuery") String searchQuery);
+
     @GET("username/{username}")
     Call<?> getByUserName();
 

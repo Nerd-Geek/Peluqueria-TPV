@@ -3,7 +3,7 @@ package ies.luisvives.peluqueriadamtpv.model;
 import lombok.*;
 
 @Data
-public class User {
+public class User implements TableEntity{
     private String id;
     private String image;
     private boolean superUser;

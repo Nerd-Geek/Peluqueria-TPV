@@ -3,8 +3,8 @@ package ies.luisvives.peluqueriadamtpv.controller;
 import ies.luisvives.peluqueriadamtpv.model.UserConfiguration;
 import ies.luisvives.peluqueriadamtpv.utils.Util;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 import java.util.Objects;
@@ -16,12 +16,16 @@ public class MainController {
     StackPane includedViewAppointments, includedViewUsers, includedViewServices, includedViewReports, includedViewSettings;
     @FXML
     ToggleButton mainViewSideMenuButtonAppointments, mainViewSideMenuButtonUsers, mainViewSideMenuButtonServices, mainViewSideMenuButtonReports, mainViewSideMenuButtonSettings;
-
+    @FXML
+    HBox search_box;
     @FXML
     TextField search_field;
-
     @FXML
     AppointmentController includedViewAppointmentsController;
+    @FXML
+    UsersController includedViewUsersController;
+    @FXML
+    ServiceController includedViewServicesController;
 
     public void initialize() {
         mainPane.getStylesheets().add(Objects.requireNonNull(this.getClass()
@@ -42,6 +46,8 @@ public class MainController {
         includedViewReports.setDisable(true);
         includedViewSettings.setVisible(false);
         includedViewSettings.setDisable(true);
+        search_box.setVisible(true);
+
     }
 
     @FXML
@@ -56,6 +62,8 @@ public class MainController {
         includedViewReports.setDisable(true);
         includedViewSettings.setVisible(false);
         includedViewSettings.setDisable(true);
+        search_box.setVisible(true);
+
     }
 
     @FXML
@@ -70,6 +78,8 @@ public class MainController {
         includedViewReports.setDisable(true);
         includedViewSettings.setVisible(false);
         includedViewSettings.setDisable(true);
+        search_box.setVisible(true);
+
     }
 
     @FXML
@@ -84,6 +94,7 @@ public class MainController {
         includedViewReports.setDisable(false);
         includedViewSettings.setVisible(false);
         includedViewSettings.setDisable(true);
+        search_box.setVisible(false);
     }
 
     @FXML
@@ -102,6 +113,8 @@ public class MainController {
 
     @FXML
     public void onSearchButtonClick() {
-        includedViewAppointmentsController.setUserSearch(search_field.getText());
+        includedViewAppointmentsController.setSearchQuery(search_field.getText());
+        includedViewServicesController.setSearchQuery(search_field.getText());
+        includedViewUsersController.setSearchQuery(search_field.getText());
     }
 }

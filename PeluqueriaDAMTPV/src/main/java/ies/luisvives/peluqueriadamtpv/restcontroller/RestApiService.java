@@ -11,6 +11,9 @@ public interface RestApiService {
     @GET("services")
     Call<List<Service>> serviceGetAll();
 
+    @GET("services")
+    Call<List<Service>> serviceGetAllWithService_name(@Query("searchQuery") String searchQuery);
+
     @GET("services/{name}")
     Call<?> getByName();
 
@@ -28,4 +31,6 @@ public interface RestApiService {
 
     @DELETE("services/{id}")
     Call<Service> deleteService(@Path("id") String id);
+
+
 }
