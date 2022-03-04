@@ -155,7 +155,14 @@ public class TableViewController implements BaseController, Initializable, Callb
             }
             dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
             dialog.showAndWait();
-		}
+		}else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(Util.getString("title.info"));
+            alert.setHeaderText(null);
+            alert.setContentText(Util.getString("title.noTableItemSelected"));
+
+            alert.showAndWait();
+        }
 	}
 
 	public void setSearchQuery(String searchQuery) {
