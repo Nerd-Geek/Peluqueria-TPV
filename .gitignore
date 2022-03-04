@@ -27,3 +27,5 @@ hs_err_pid*
 settings.dat
 
 PeluqueriaDAMTPV/PeluqueriaDAMTPV.iml
+/target
+/out
