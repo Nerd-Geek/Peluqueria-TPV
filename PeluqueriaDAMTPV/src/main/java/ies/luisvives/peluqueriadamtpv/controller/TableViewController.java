@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class TableViewController implements Initializable, Callback {
+public class TableViewController implements BaseController, Initializable, Callback {
 
     public static final int APPOINTMENT = 0;
     public static final int USER = 1;

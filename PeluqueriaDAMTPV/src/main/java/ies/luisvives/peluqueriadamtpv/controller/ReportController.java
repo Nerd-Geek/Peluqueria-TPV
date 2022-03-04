@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class ReportController implements Initializable {
+public class ReportController implements BaseController, Initializable{
     @FXML
     PieChart serviceHigher;
     @FXML

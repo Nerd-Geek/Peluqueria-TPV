@@ -55,6 +55,19 @@
                   </Label>
                </children>
             </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="serviceName11" text="%text.username">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="fieldUsername" promptText="%text.username" />
+               </children>
+            </HBox>
                 <HBox prefHeight="100.0" prefWidth="200.0">
                     <children>
                         <VBox prefHeight="200.0" prefWidth="100.0">

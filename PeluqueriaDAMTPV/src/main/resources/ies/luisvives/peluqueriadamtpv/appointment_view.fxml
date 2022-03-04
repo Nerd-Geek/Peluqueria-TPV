@@ -13,6 +13,8 @@
                <children>
                   <fx:include fx:id="calendarView" source="calendar_view.fxml" />
                   <Separator maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" />
+                  <fx:include fx:id="hourView" source="hour_view.fxml" />
+                  <Separator layoutX="740.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" />
                   <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                      <children>
                         <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%text.selectService" VBox.vgrow="ALWAYS">
@@ -52,8 +54,7 @@
                         </HBox>
                         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                            <children>
-                              <Button fx:id="create_appointment_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%text.createAppointment" VBox.vgrow="ALWAYS"
-                              onAction="#createAppointment">
+                              <Button fx:id="create_appointment_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createAppointment" text="%text.createAppointment" VBox.vgrow="ALWAYS">
                                  <VBox.margin>
                                     <Insets top="10.0" />
                                  </VBox.margin>

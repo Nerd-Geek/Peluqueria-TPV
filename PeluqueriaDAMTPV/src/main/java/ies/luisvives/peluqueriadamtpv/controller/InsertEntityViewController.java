@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class InsertEntityViewController {
+public class InsertEntityViewController implements BaseController{
     @FXML
     private Label titleLabel;
     @FXML

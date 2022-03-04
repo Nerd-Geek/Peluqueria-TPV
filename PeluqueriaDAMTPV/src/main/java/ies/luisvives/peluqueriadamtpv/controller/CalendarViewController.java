@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class CalendarViewController {
+public class CalendarViewController implements BaseController{
     private Calendar calendar;
     private List<List<Button>> gridButtons;
     @FXML
@@ -221,5 +221,10 @@ public class CalendarViewController {
 
     public void setTableViewController(TableViewController tableViewController) {
         this.tableViewController = tableViewController;
+    }
+
+    @FXML
+    protected void onButtonHourPressed() {
+        // TODO document why this method is empty
     }
 }
