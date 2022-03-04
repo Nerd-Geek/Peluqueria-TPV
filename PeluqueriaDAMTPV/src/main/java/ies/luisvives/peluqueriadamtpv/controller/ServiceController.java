@@ -7,7 +7,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class ServiceController {
+public class ServiceController implements BaseController{
     @FXML
     TextField stockService;
     @FXML

@@ -1,12 +1,17 @@
 package ies.luisvives.peluqueriadamtpv.utils;
 
+import ies.luisvives.peluqueriadamtpv.controller.BaseController;
 import ies.luisvives.peluqueriadamtpv.model.UserConfiguration;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class Util {
@@ -24,8 +29,23 @@ public class Util {
 
     public static Parent getParentRoot(String file) throws IOException {
         setResourceBundleLanguage();
-        return FXMLLoader.load(Objects.requireNonNull(Util.class.getResource(PACKAGE_DIR + file + ".fxml")),
-                resourceBundle);
+        return FXMLLoader.load(Objects.requireNonNull(loadResourceUrl(file)), resourceBundle);
+    }
+
+    public static URL loadResourceUrl(String file) throws IOException {
+        return Util.class.getResource(PACKAGE_DIR + file + ".fxml");
+    }
+
+    public static Optional<Node> fxmlLoaderSetController(String file, BaseController controller){
+        Optional<Node> opt = Optional.empty();
+        try {
+            FXMLLoader loader = new FXMLLoader(loadResourceUrl(file), resourceBundle);
+            loader.setController(controller);
+            opt = Optional.of(loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return opt;
     }
 
     public static String getString(String str) {

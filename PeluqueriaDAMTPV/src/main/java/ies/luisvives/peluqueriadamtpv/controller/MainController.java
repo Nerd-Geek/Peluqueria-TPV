@@ -12,7 +12,7 @@ import javafx.util.Duration;
 import java.util.List;
 import java.util.Objects;
 
-public class MainController {
+public class MainController implements BaseController{
     TranslateTransition toggleTranlate;
     @FXML
     public SplitPane mainPane;

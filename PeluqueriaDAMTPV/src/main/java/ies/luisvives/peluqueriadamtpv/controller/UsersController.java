@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-public class UsersController implements Initializable, Callback {
+public class UsersController implements BaseController, Initializable, Callback {
     @FXML
     TextField usernameTextField, nameTextField, surnameTextField, passwordTextField, telephoneTextField, emailTextField, imageTextField;
     @FXML
