@@ -222,9 +222,4 @@ public class CalendarViewController implements BaseController{
     public void setTableViewController(TableViewController tableViewController) {
         this.tableViewController = tableViewController;
     }
-
-    @FXML
-    protected void onButtonHourPressed() {
-        // TODO document why this method is empty
-    }
 }

@@ -20,6 +20,8 @@ import javax.security.auth.callback.Callback;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -58,10 +60,13 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     private LocalDate date;
 
+    private LocalTime time;
+
 	public TableViewController() {
 		searchQuery = "";
         serviceId = null;
         date = null;
+        time = null;
         elements = new ArrayList<>();
         column1 = new TableColumn<>();
         column2 = new TableColumn<>();
@@ -87,6 +92,7 @@ public class TableViewController implements BaseController, Initializable, Callb
     @FXML
     public void viewAll() {
         date = null;
+        time = null;
         searchQuery = "";
         serviceId = null;
         refreshTable();
@@ -201,8 +207,10 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     private void updateAppointmentItems() {
         try {
-            Response<List<Appointment>> response = APIRestConfig.getAppointmentsService()
-                    .appointmentFindByDateAndUser_UsernameContainsIgnoreCaseAndService_Id(searchQuery, date, serviceId).execute();
+            Response<List<Appointment>> response = APIRestConfig
+                    .getAppointmentsService()
+                    .appointmentFindByDateAndUser_UsernameContainsIgnoreCaseAndService_Id(searchQuery, date, serviceId)
+                    .execute(); //TODO: add the time query
             if (response.body() != null) {
                 AppointmentListMapper mapper = new AppointmentListMapper();
                 ObservableList<TableEntity> appointments =
@@ -296,5 +304,10 @@ public class TableViewController implements BaseController, Initializable, Callb
         table.getColumns().add(column6);
         table.getColumns().add(column7);
         updateUserItems();
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+        refreshTable();
     }
 }

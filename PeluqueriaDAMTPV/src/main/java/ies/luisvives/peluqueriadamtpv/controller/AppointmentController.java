@@ -1,17 +1,12 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
 import ies.luisvives.peluqueriadamtpv.utils.Util;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
 
 public class AppointmentController implements BaseController{
@@ -29,6 +24,8 @@ public class AppointmentController implements BaseController{
     private VBox calendarView;
     @FXML
     private CalendarViewController calendarViewController;
+    @FXML
+    private HourViewController hourViewController;
 
     public AppointmentController() {
     }
@@ -38,6 +35,7 @@ public class AppointmentController implements BaseController{
         tableViewController.setSearchQuery("");
         tableViewController.setEntityForTable(TableViewController.APPOINTMENT);
         calendarViewController.setTableViewController(tableViewController);
+        hourViewController.setTableViewController(tableViewController);
     }
 
     @FXML

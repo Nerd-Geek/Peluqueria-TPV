@@ -38,7 +38,7 @@
                   <Insets />
                </opaqueInsets>
                <toggleGroup>
-                  <ToggleGroup fx:id="sidemenutogglebuttons"></ToggleGroup>
+                  <ToggleGroup fx:id="sidemenutogglebuttons" />
                </toggleGroup>
             </ToggleButton>
             <ToggleButton fx:id="mainViewSideMenuButtonUsers" graphicTextGap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#onMenuItemSelected" onTouchPressed="#onMenuItemSelected" prefHeight="100.0" prefWidth="250.0" styleClass="sidemenuitem" stylesheets="@css/css.css" text="%title.users" toggleGroup="$sidemenutogglebuttons">
@@ -61,7 +61,7 @@
                   <Insets />
                </opaqueInsets>
                <graphic>
-                  <FontIcon iconColor="WHITE" iconLiteral="fas-cut" iconSize="32" styleClass="FontIcon" />
+                  <FontIcon iconColor="WHITE" iconLiteral="fas-cut" iconSize="32" styleClass="FontIcon" text="" />
                </graphic>
             </ToggleButton>
             <ToggleButton fx:id="mainViewSideMenuButtonReports" graphicTextGap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#onMenuItemSelected" onTouchPressed="#onMenuItemSelected" prefHeight="100.0" prefWidth="250.0" styleClass="sidemenuitem" stylesheets="@css/css.css" text="%title.reports" toggleGroup="$sidemenutogglebuttons">
