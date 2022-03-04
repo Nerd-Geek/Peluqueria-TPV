@@ -15,19 +15,19 @@ public interface RestApiService {
     Call<List<Service>> serviceGetAllWithService_name(@Query("searchQuery") String searchQuery);
 
     @GET("services/{name}")
-    Call<?> getByName();
+    Call<Service> getByName();
 
     @GET("services/{name}")
-    Call<?> getByNameByOrderByPriceAsc();
+    Call<Service> getByNameByOrderByPriceAsc();
 
     @GET("services/{id}")
-    Call<?> serviceGetById(@Path("id") String id);
+    Call<Service> serviceGetById(@Path("id") String id);
 
     @POST("services")
     Call<Service> insertService(@Body Service service);
 
     @PUT("services/{id}")
-    Call<?> updateService();
+    Call<Service> updateService();
 
     @DELETE("services/{id}")
     Call<Service> deleteService(@Path("id") String id);

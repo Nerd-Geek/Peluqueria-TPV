@@ -48,7 +48,7 @@ public class UserConfiguration implements Serializable {
     }
 
     /**
-     * Asigna los idiomas disponibls según el fichero de settings de la carpeta i18n
+     * Asigna los idiomas disponibles según el fichero de settings de la carpeta i18n
      */
     private void initLanguages() {
         availableLanguages = new HashSet<>();

@@ -27,7 +27,7 @@ public interface RestAPIAppointments {
             , @Query("service_id") String serviceId);
 
     @GET("appointments/{id}")
-    Call<Appointment> appointmentGetById();
+    Call<Appointment> appointmentGetById(@Path("id") String id);
 
     @POST("appointments/")
     Call<Appointment> insertAppointments();

@@ -106,7 +106,7 @@ public class AppointmentController implements BaseController{
             dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
             dialog.showAndWait();
         }else{
-            System.err.println("Ha ocurrido un error al cargar "); //TODO: Sustituir por log y agregar i18n
+            System.err.println(Util.getString("error.loading"));
         }
     }
 

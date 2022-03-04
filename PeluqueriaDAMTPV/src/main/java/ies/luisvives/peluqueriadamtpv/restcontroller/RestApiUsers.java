@@ -16,16 +16,16 @@ public interface RestApiUsers {
     Call<List<User>> userGetAllWithUser_name(@Query("searchQuery") String searchQuery);
 
     @GET("username/{username}")
-    Call<?> getByUserName();
+    Call<User> getByUserName();
 
     @GET("users/{id}")
-    Call<?> usersGetById(@Path("id") String id);
+    Call<User> usersGetById(@Path("id") String id);
 
     @POST("users")
     Call<User> insertUsers(@Body User user);
 
     @PUT("users/{id}")
-    Call<?> updateUsers();
+    Call<User> updateUsers();
 
     @DELETE("users/{id}")
     Call<User> deleteUser(@Path("id") String id);

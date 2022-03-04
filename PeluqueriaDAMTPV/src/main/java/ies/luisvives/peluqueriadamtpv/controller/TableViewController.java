@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import retrofit2.Response;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class TableViewController implements BaseController, Initializable, Callback {
@@ -121,13 +123,24 @@ public class TableViewController implements BaseController, Initializable, Callb
                     System.err.println("Delete not done");
                 }
             }
+        }else{
+            notSelectedItemAlert();
         }
+    }
+
+    private void notSelectedItemAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(Util.getString("title.info"));
+        alert.setHeaderText(null);
+        alert.setContentText(Util.getString("title.noTableItemSelected"));
+
+        alert.showAndWait();
     }
 
     private boolean confirmDeleteDialog() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Borrado");
-        alert.setContentText("Desea borrar?");
+        alert.setTitle(Util.getString("text.remove"));
+        alert.setContentText(Util.getString("text.removeQuestion"));
         alert.showAndWait();
         if (alert.getResult().getButtonData().isDefaultButton())
             return true;
@@ -137,8 +150,8 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     private void deleteDoneDialog() {
         Alert confirm = new Alert(Alert.AlertType.INFORMATION);
-        confirm.setTitle("Borrado");
-        confirm.setContentText("Borrado");
+        confirm.setTitle(Util.getString("text.remove"));
+        confirm.setContentText(Util.getString("text.remove"));
         confirm.showAndWait();
     }
 
@@ -146,22 +159,41 @@ public class TableViewController implements BaseController, Initializable, Callb
     public void details() {
         if (table.getSelectionModel().getSelectedCells().size() == 1) {
             Dialog dialog = new Dialog();
+            String elementId = table.getItems().get(table.getSelectionModel().getFocusedIndex()).getId();
             try {
                 DialogPane pane = new DialogPane();
-                pane.setContent(Util.getParentRoot("service_item_view"));
-                dialog.setDialogPane(pane);
+
+                Optional<Node> opt = Optional.empty();
+
+                switch(this.type) {
+                    case APPOINTMENT:
+                        Appointment appointment = APIRestConfig.getAppointmentsService().appointmentGetById(elementId).execute().body();
+                        opt = Util.fxmlLoaderSetController("appointment_item_view", new AppointmentItemController(appointment));
+                        break;
+                    case USER:
+                        User user = APIRestConfig.getUsersService().usersGetById(elementId).execute().body();
+                        opt = Util.fxmlLoaderSetController("user_item_view", new UserItemController(user));
+                        break;
+                    case SERVICE:
+                        Service service = APIRestConfig.getServicesService().serviceGetById(elementId).execute().body();
+                        opt = Util.fxmlLoaderSetController("service_item_view", new ServiceItemController(service));
+                        break;
+                }
+
+                //Load dialog
+                if (opt.isPresent()){
+                    pane.setContent(opt.get());
+                    dialog.setDialogPane(pane);
+                    dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+                    dialog.showAndWait();
+                }else{
+                    System.err.println(Util.getString("error.loading"));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-            dialog.showAndWait();
 		}else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle(Util.getString("title.info"));
-            alert.setHeaderText(null);
-            alert.setContentText(Util.getString("title.noTableItemSelected"));
-
-            alert.showAndWait();
+            notSelectedItemAlert();
         }
 	}
 
