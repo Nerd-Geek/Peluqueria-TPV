@@ -1,5 +1,6 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
+import ies.luisvives.peluqueriadamtpv.model.Appointment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,6 +20,12 @@ public class CreateAppointmentController implements BaseController{
 
     @FXML
     private TextField fieldUsername;
+
+    private Appointment appointment;
+
+    public CreateAppointmentController(Appointment appointment) {
+        this.appointment = appointment; //TODO: DO DO
+    }
 
     @FXML
     public void initialize() {
@@ -49,9 +56,5 @@ public class CreateAppointmentController implements BaseController{
         cbMinute.setOnAction(event -> {
             System.out.println("TEST: " + cbMinute.getValue()); //TODO: DO
         });
-    }
-
-    private void createAppointment(){
-        System.out.println(fieldUsername.getText()); //TODO: DO
     }
 }

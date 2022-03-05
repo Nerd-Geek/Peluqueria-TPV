@@ -8,10 +8,7 @@ import javafx.scene.control.Label;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class CalendarViewController implements BaseController{
     private Calendar calendar;
@@ -111,6 +108,8 @@ public class CalendarViewController implements BaseController{
     @FXML
     private TableViewController tableViewController;
 
+    private String actualDateString = "";
+
     public CalendarViewController() {
         gridButtons = new ArrayList<>();
         calendar = Calendar.getInstance();
@@ -158,6 +157,7 @@ public class CalendarViewController implements BaseController{
     public void onCalendarDayAction (ActionEvent event) {
         System.out.println("Button pressed");
         LocalDate date = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, Integer.parseInt(((Button)event.getSource()).getText()));
+        actualDateString = date.toString();
         System.out.println("REST petition with date " + date);
         tableViewController.setDate(date);
     }
@@ -221,5 +221,13 @@ public class CalendarViewController implements BaseController{
 
     public void setTableViewController(TableViewController tableViewController) {
         this.tableViewController = tableViewController;
+    }
+
+    public Optional<String> getActualDateString() {
+        if (Objects.equals(actualDateString, "")){
+            return Optional.empty();
+        }else{
+            return Optional.of(actualDateString);
+        }
     }
 }

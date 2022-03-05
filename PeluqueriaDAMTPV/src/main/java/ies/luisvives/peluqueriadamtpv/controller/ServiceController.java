@@ -97,7 +97,7 @@ public class ServiceController implements BaseController{
 //        ObservableList<Service> services = FXCollections.observableArrayList();
 //        Service service = new Service();
 //        if (!nombreService.getText().equals("")) {
-//            service.setId(UUID.randomUUID().toString());
+//            service.setId(UUID.randomUUID().toString()); //TODO: why UUID set here? - vulnerability
 //            service.setName(nombreService.getText());
 //            service.setDescription(descriptionService.getText());
 //            service.setStock(Integer.valueOf(stockService.getText()));

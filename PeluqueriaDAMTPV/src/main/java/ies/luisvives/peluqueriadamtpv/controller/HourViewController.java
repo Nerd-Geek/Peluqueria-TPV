@@ -7,6 +7,8 @@ import javafx.scene.control.Label;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.time.LocalTime;
+import java.util.Objects;
+import java.util.Optional;
 
 public class HourViewController {
     @FXML private FontIcon iconTime;
@@ -47,6 +49,7 @@ public class HourViewController {
 
     private int actualPage = DAY;
     private int maxPages = NIGHT;
+    private String actualTimeString = "";
 
     private TableViewController tableViewController;
 
@@ -59,6 +62,7 @@ public class HourViewController {
     private void refeshTableContent() {
         updateActualPage();
         updateHoursTable();
+        //this.actualTimeString = ""; //TODO: hide user friendly?
     }
 
     private String convertHourStr(int startHour) {
@@ -72,9 +76,10 @@ public class HourViewController {
     @FXML
     protected void onButtonHourPressed(ActionEvent event) {
         Button b = (Button) event.getSource();
+        actualTimeString = b.getText();
 
         System.out.println("Button pressed");
-        LocalTime time = stringToTime(b.getText());
+        LocalTime time = stringToTime(actualTimeString);
 
         System.out.println("REST petition with time " + time);
         tableViewController.setTime(time); //TODO: DO
@@ -93,6 +98,14 @@ public class HourViewController {
 
     public void setTableViewController(TableViewController tableViewController) {
         this.tableViewController = tableViewController;
+    }
+
+    public Optional<String> getActualTimeString(){
+        if (Objects.equals(this.actualTimeString, "")){
+            return Optional.empty();
+        }else{
+            return Optional.of(this.actualTimeString);
+        }
     }
 
     private void updateHoursTable() {

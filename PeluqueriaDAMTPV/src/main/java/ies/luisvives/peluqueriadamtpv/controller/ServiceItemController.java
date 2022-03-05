@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 public class ServiceItemController implements BaseController {
-
     @FXML private Label nameService;
     @FXML private Label descriptionService;
     @FXML private Label priceService;

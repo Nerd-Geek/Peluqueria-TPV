@@ -70,7 +70,7 @@ public class UsersController implements BaseController, Initializable, Callback 
         ObservableList<User> users =
                 FXCollections.observableArrayList();
         User user = new User();
-        user.setId(UUID.randomUUID().toString());
+        user.setId(UUID.randomUUID().toString()); //TODO: why UUID set here? - vulnerability
         user.setUsername(usernameTextField.getText());
         user.setName(nameTextField.getText());
         user.setSurname(surnameTextField.getText());

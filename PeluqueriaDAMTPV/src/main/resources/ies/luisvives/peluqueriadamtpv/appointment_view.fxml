@@ -57,7 +57,7 @@
                               <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                  <children>
                                     <Label text="%text.username" />
-                                    <TextField promptText="%text.username" />
+                                    <TextField fx:id="usernameField" promptText="%text.username" />
                                  </children></HBox>
                               <Button fx:id="create_appointment_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createAppointment" text="%text.createAppointment" VBox.vgrow="ALWAYS">
                                  <VBox.margin>

@@ -36,10 +36,10 @@
             <ColumnConstraints minWidth="60.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
             <RowConstraints />
         </rowConstraints>
           <children>

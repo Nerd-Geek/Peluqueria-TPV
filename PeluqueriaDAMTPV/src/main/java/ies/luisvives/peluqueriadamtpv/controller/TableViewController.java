@@ -21,7 +21,6 @@ import javax.security.auth.callback.Callback;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +150,7 @@ public class TableViewController implements BaseController, Initializable, Callb
     private void deleteDoneDialog() {
         Alert confirm = new Alert(Alert.AlertType.INFORMATION);
         confirm.setTitle(Util.getString("text.remove"));
-        confirm.setContentText(Util.getString("text.remove"));
+        confirm.setContentText(Util.getString("text.removed"));
         confirm.showAndWait();
     }
 
@@ -172,7 +171,7 @@ public class TableViewController implements BaseController, Initializable, Callb
                         break;
                     case USER:
                         User user = APIRestConfig.getUsersService().usersGetById(elementId).execute().body();
-                        opt = Util.fxmlLoaderSetController("user_item_view", new UserItemController(user));
+                        opt = Util.fxmlLoaderSetController("user_item_view", new UserItemController(user)); //TODO: Same as other - why NullPointerException?
                         break;
                     case SERVICE:
                         Service service = APIRestConfig.getServicesService().serviceGetById(elementId).execute().body();

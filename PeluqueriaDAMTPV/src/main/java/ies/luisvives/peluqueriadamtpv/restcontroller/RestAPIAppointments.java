@@ -2,6 +2,7 @@ package ies.luisvives.peluqueriadamtpv.restcontroller;
 
 
 import ies.luisvives.peluqueriadamtpv.model.Appointment;
+import ies.luisvives.peluqueriadamtpv.model.User;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -30,7 +31,7 @@ public interface RestAPIAppointments {
     Call<Appointment> appointmentGetById(@Path("id") String id);
 
     @POST("appointments/")
-    Call<Appointment> insertAppointments();
+    Call<Appointment> insertAppointments(@Body Appointment appointment);
 
     @PUT("appointments/{id}")
     Call<Appointment> updateAppointments();

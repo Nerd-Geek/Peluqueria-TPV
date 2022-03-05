@@ -5,12 +5,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 public class UserItemController implements BaseController {
-    @FXML private Label textUsername;
-    @FXML private Label textName;
-    @FXML private Label textSurname;
-    @FXML private Label textPhone;
-    @FXML private Label textEmail;
-    @FXML private Label textGender;
+    @FXML private Label usernameUser;
+    @FXML private Label nameUser;
+    @FXML private Label surnameUser;
+    @FXML private Label phoneUser;
+    @FXML private Label emailUser;
+    @FXML private Label genderUser;
     private User user;
 
     public UserItemController(User user) {
@@ -18,13 +18,13 @@ public class UserItemController implements BaseController {
     }
 
     @FXML
-    public void initialize(){
-        //TODO: Arreglar - Da NullPointerException
-        this.textUsername.setText(user.getUsername());
-        this.textName.setText(user.getName());
-        this.textSurname.setText(user.getSurname());
-        this.textPhone.setText(user.getPhoneNumber());
-        this.textEmail.setText(user.getEmail());
-        this.textGender.setText(user.getGender().toString());
+    public void initialize() {
+        // TODO: Arreglar - Da NullPointerException
+//        usernameUser.setText(user.getUsername());
+//        nameUser.setText(user.getName());
+//        surnameUser.setText(user.getSurname());
+//        phoneUser.setText(user.getPhoneNumber());
+//        emailUser.setText(user.getEmail());
+//        genderUser.setText(user.getGender().toString());
     }
 }

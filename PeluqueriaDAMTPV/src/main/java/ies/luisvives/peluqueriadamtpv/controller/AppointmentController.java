@@ -1,7 +1,8 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
+import ies.luisvives.peluqueriadamtpv.model.Appointment;
 import ies.luisvives.peluqueriadamtpv.model.Service;
-import ies.luisvives.peluqueriadamtpv.model.TableEntity;
+import ies.luisvives.peluqueriadamtpv.model.User;
 import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
 import ies.luisvives.peluqueriadamtpv.utils.Util;
 import javafx.collections.FXCollections;
@@ -16,6 +17,7 @@ import retrofit2.Response;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class AppointmentController implements BaseController{
     @FXML
@@ -34,6 +36,8 @@ public class AppointmentController implements BaseController{
     private CalendarViewController calendarViewController;
     @FXML
     private HourViewController hourViewController;
+    @FXML
+    private TextField usernameField;
 
     @FXML
     private Label labelService;
@@ -96,22 +100,149 @@ public class AppointmentController implements BaseController{
     }
 
     @FXML
-    public void createAppointment() {
+    public void createAppointment() throws IOException {
         Dialog dialog = new Dialog();
         DialogPane pane = new DialogPane();
-        Optional<Node> opt = Util.fxmlLoaderSetController("appointment-create-view", new CreateAppointmentController());
-        if (opt.isPresent()){
-            pane.setContent(opt.get());
-            dialog.setDialogPane(pane);
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-            dialog.showAndWait();
-        }else{
-            System.err.println(Util.getString("error.loading"));
+
+        Optional<Appointment> appointment = appointmentCreate();
+        if (appointment.isPresent()){
+            Optional<Node> opt = Util.fxmlLoaderSetController("appointment-create-view",
+                    new CreateAppointmentController(appointment.get()));
+            if (opt.isPresent()){
+                pane.setContent(opt.get());
+                dialog.setDialogPane(pane);
+                dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+                dialog.showAndWait();
+            }else{
+                System.err.println(Util.getString("error.loading"));
+            }
         }
     }
 
+    /**
+     * Return an appointment if can be created
+     * pop up an alert if appointment can't be created
+     * @return Optional Appointment present if can be created
+     */
+    private Optional<Appointment> appointmentCreate() throws IOException {
+        Optional<Appointment> appointment = Optional.empty();
+        Optional<String> date = getDate();
+        Optional<String> time = getTime();
+        Optional<User> user = getUser();
+        Optional<Service> service = getService();
+
+        if (date.isPresent() && time.isPresent() && user.isPresent() && service.isPresent()){
+            Appointment ap = new Appointment();
+            ap.setId(UUID.randomUUID().toString()); //TODO: why UUID set here? - vulnerability
+            ap.setDate(date.get());
+            ap.setTime(time.get());
+            ap.setUser(user.get());
+            ap.setService(service.get());
+            appointment = Optional.of(new Appointment());
+        }
+        return appointment;
+    }
+
+    private Optional<String> getTime() {
+        Optional<String> str = hourViewController.getActualTimeString();
+        if (str.isEmpty()){
+            alertNoConditionToCreate(Util.getString("error.noTimeSet"));
+        }
+        return str;
+    }
+
+    private Optional<String> getDate() {
+        Optional<String> str = calendarViewController.getActualDateString();
+        if (str.isEmpty()){
+            alertNoConditionToCreate(Util.getString("error.noDateSet"));
+        }
+        return str;
+    }
+
+    /**
+     * Return a Service if set and exist
+     * Pop up an alert if it doesn't exist
+     * @return Optional Present if service exists
+     */
+    private Optional<Service> getService() {
+        Optional<Service> service = Optional.empty();
+        if (services.isEmpty()){
+            alertNoConditionToCreate(Util.getString("text.noServices"));
+        }else{
+            service = Optional.of(services.get(actualServiceSelected));
+        }
+        return service;
+    }
+
+    /**
+     * Return a User if set and exist
+     * Pop up an alert if it doesn't exist
+     * @return Optional Present if user exists
+     */
+    private Optional<User> getUser() throws IOException {
+        Optional<User> userOpt = Optional.empty();
+        Optional<String> errorMsg = Optional.empty();
+
+        if (usernameField.getText().isEmpty()){
+            errorMsg = Optional.of(Util.getString("error.userNotSet"));
+        } else{
+            User user = APIRestConfig.getUsersService().getByUserName(usernameField.getText()).execute().body();
+            if (user == null){
+                errorMsg = Optional.of(Util.getString("error.userNotFound") + "\n" + getUserSuggestionsMsg());
+            }else{
+                userOpt = Optional.of(user);
+            }
+        }
+
+        //Show alert if error msg and return result
+        errorMsg.ifPresent(this::alertNoConditionToCreate);
+        return userOpt;
+    }
+
+    /**
+     * Return user suggestions (empty String if any suggestion)
+     * @return User suggestions
+     * @throws IOException Input/Output exception
+     */
+    private String getUserSuggestionsMsg() throws IOException {
+        int limit = 10;
+        StringBuilder usersSuggestionMsg = new StringBuilder();
+        List<User> usersSuggestions = APIRestConfig.getUsersService()
+                .userGetAllWithUser_name(usernameField.getText()).execute().body();
+        if (usersSuggestions != null && !usersSuggestions.isEmpty()){
+            usersSuggestionMsg.append("\n").append(Util.getString("text.userSuggestions")).append("\n");
+
+            int size = usersSuggestions.size();
+            if (size > limit){
+                size = limit;
+            }
+
+            for (int n = 0; n < size; n++) {
+                User user = usersSuggestions.get(n);
+                usersSuggestionMsg.append(user.getUsername()).append(" (")
+                        .append(user.getName()).append(" ").append(user.getSurname()).append(")").append("\n");
+            }
+        }
+        return usersSuggestionMsg.toString();
+    }
+
+    /**
+     * Pop up an alert
+     * @param infoMsg Content Text of alert
+     */
+    private void alertNoConditionToCreate(String infoMsg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(Util.getString("title.info"));
+        alert.setHeaderText(null);
+        alert.setContentText(infoMsg);
+        alert.showAndWait();
+    }
+
+    /**
+     * Set te search query
+     * @param searchQuery search query
+     */
     public void setSearchQuery(String searchQuery) {
         tableViewController.setSearchQuery(searchQuery);
     }
-
 }
