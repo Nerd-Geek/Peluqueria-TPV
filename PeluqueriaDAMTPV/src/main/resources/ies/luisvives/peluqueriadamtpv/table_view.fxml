@@ -9,17 +9,17 @@
 			<TableView fx:id="table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
 			<VBox>
 				<children>
-					<Button fx:id="delete_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#delete" text="Delete" VBox.vgrow="ALWAYS">
+					<Button fx:id="delete_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#delete" text="%text.delete" VBox.vgrow="ALWAYS">
 						<VBox.margin>
 							<Insets top="20.0" />
 						</VBox.margin>
 					</Button>
-					<Button fx:id="details_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#details" text="Details" VBox.vgrow="ALWAYS">
+					<Button fx:id="details_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#details" text="%text.details" VBox.vgrow="ALWAYS">
 						<VBox.margin>
 							<Insets top="20.0" />
 						</VBox.margin>
 					</Button>
-					<Button fx:id="view_all" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#viewAll" text="View All" VBox.vgrow="ALWAYS">
+					<Button fx:id="view_all" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#viewAll" text="%text.viewAll" VBox.vgrow="ALWAYS">
 						<VBox.margin>
 							<Insets top="20.0" />
 						</VBox.margin>

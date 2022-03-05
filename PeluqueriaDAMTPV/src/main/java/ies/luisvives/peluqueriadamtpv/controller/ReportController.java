@@ -106,7 +106,7 @@ public class ReportController implements BaseController, Initializable{
         map.forEach((s, q) -> pieChartData.add(new PieChart.Data(s,q)));
         genderChart.setData(pieChartData);
         genderChart.setClockwise(false);
-        genderChart.setTitle(Util.getString("text.programLanguageDistribution"));
+        genderChart.setTitle(Util.getString("text.serviceDistribution"));
     }
 
     /**

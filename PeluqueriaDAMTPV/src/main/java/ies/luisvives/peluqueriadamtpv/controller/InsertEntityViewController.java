@@ -58,7 +58,7 @@ public class InsertEntityViewController implements BaseController{
     }
 
     private void loadUserComponents() {
-        titleLabel.setText("User Insertion");
+        titleLabel.setText(Util.getString("text.addUser"));
         addEntityField(Util.getString("text.username"));
         addEntityField(Util.getString("text.name"));
         addEntityField(Util.getString("text.surname"));
