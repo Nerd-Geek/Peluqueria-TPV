@@ -2,6 +2,8 @@ package ies.luisvives.peluqueriadamtpv.model;
 
 import lombok.*;
 
+import java.util.Set;
+
 @Data
 public class User implements TableEntity{
     private String id;
@@ -14,4 +16,5 @@ public class User implements TableEntity{
     private String phoneNumber;
     private String email;
     private UserGender gender;
+    private Set<UserRoles> userRoles;
 }

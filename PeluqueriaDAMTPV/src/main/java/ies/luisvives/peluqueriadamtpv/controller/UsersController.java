@@ -2,6 +2,7 @@ package ies.luisvives.peluqueriadamtpv.controller;
 
 import ies.luisvives.peluqueriadamtpv.model.User;
 import ies.luisvives.peluqueriadamtpv.model.UserGender;
+import ies.luisvives.peluqueriadamtpv.model.UserRoles;
 import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
