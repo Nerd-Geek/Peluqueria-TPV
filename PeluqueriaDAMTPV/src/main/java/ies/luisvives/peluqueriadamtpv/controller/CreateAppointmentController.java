@@ -24,7 +24,7 @@ public class CreateAppointmentController implements BaseController{
     private Appointment appointment;
 
     public CreateAppointmentController(Appointment appointment) {
-        this.appointment = appointment; //TODO: DO DO
+        this.appointment = appointment; //TODO: DO DO REMOVE ALL CONTROLLER AND VIEW?
     }
 
     @FXML

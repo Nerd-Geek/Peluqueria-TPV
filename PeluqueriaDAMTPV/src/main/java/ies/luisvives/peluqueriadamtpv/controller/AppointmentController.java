@@ -56,6 +56,14 @@ public class AppointmentController implements BaseController{
         calendarViewController.setTableViewController(tableViewController);
         hourViewController.setTableViewController(tableViewController);
         initServices();
+
+        usernameField.setOnAction(e -> {
+            try {
+                createAppointment();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
     private void initServices() {
@@ -185,8 +193,8 @@ public class AppointmentController implements BaseController{
 
         if (usernameField.getText().isEmpty()){
             errorMsg = Optional.of(Util.getString("error.userNotSet"));
-        } else{
-            User user = APIRestConfig.getUsersService().getByUserName(usernameField.getText()).execute().body();
+        }else{
+            User user = APIRestConfig.getUsersService().findByUsername(usernameField.getText()).execute().body();
             if (user == null){
                 errorMsg = Optional.of(Util.getString("error.userNotFound") + "\n" + getUserSuggestionsMsg());
             }else{

@@ -2,9 +2,7 @@ package ies.luisvives.peluqueriadamtpv.controller;
 
 import ies.luisvives.peluqueriadamtpv.model.User;
 import ies.luisvives.peluqueriadamtpv.model.UserGender;
-import ies.luisvives.peluqueriadamtpv.model.UserRoles;
 import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,13 +23,25 @@ import java.util.UUID;
 
 public class UsersController implements BaseController, Initializable, Callback {
     @FXML
-    TextField usernameTextField, nameTextField, surnameTextField, passwordTextField, telephoneTextField, emailTextField, imageTextField;
+    private TextField usernameTextField;
     @FXML
-    ChoiceBox<String> gender_choice_box;
+    private TextField nameTextField;
     @FXML
-    HBox tableView;
+    private TextField surnameTextField;
     @FXML
-    TableViewController tableViewController;
+    private TextField passwordTextField;
+    @FXML
+    private TextField telephoneTextField;
+    @FXML
+    private TextField emailTextField;
+    @FXML
+    private TextField imageTextField;
+    @FXML
+    private ChoiceBox<String> gender_choice_box;
+    @FXML
+    private HBox tableView;
+    @FXML
+    private TableViewController tableViewController;
     @FXML
     private VBox insertEntityView;
     @FXML
