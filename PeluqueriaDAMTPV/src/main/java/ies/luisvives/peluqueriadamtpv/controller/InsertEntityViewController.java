@@ -1,7 +1,7 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
-import ies.luisvives.peluqueriadamtpv.model.User;
 import ies.luisvives.peluqueriadamtpv.model.UserGender;
+import ies.luisvives.peluqueriadamtpv.utils.Util;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
@@ -10,7 +10,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InsertEntityViewController implements BaseController{
@@ -48,21 +50,21 @@ public class InsertEntityViewController implements BaseController{
     }
 
     private void loadServiceComponents() {
-        titleLabel.setText("Service Insertion");
-        addEntityField("name");
-        addEntityField("description");
-        addEntityField("price");
-        addEntityField("stock");
+        titleLabel.setText(Util.getString("text.addService"));
+        addEntityField(Util.getString("text.name"));
+        addEntityField(Util.getString("text.description"));
+        addEntityField(Util.getString("text.price"));
+        addEntityField(Util.getString("text.stock"));
     }
 
     private void loadUserComponents() {
         titleLabel.setText("User Insertion");
-        addEntityField("username");
-        addEntityField("name");
-        addEntityField("surname");
-        addEntityField("password");
-        addEntityField("telephone");
-        addEntityField("e-mail");
+        addEntityField(Util.getString("text.username"));
+        addEntityField(Util.getString("text.name"));
+        addEntityField(Util.getString("text.surname"));
+        addEntityField(Util.getString("text.password"));
+        addEntityField(Util.getString("text.telephone"));
+        addEntityField(Util.getString("text.email"));
         addGenderChoiceBox();
     }
 

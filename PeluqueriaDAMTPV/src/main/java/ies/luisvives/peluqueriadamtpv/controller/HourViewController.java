@@ -43,9 +43,9 @@ public class HourViewController {
     @FXML private Button hourFour4;
     @FXML private Button hourFour5;
 
-    private static int DAY = 1;
-    private static int AFTERNOON = 2;
-    private static int NIGHT = 3;
+    private static final int DAY = 1;
+    private static final int AFTERNOON = 2;
+    private static final int NIGHT = 3;
 
     private int actualPage = DAY;
     private int maxPages = NIGHT;
@@ -78,10 +78,10 @@ public class HourViewController {
         Button b = (Button) event.getSource();
         actualTimeString = b.getText();
 
-        System.out.println("Button pressed");
+        System.out.println("Button pressed"); //TODO: DEL?
         LocalTime time = stringToTime(actualTimeString);
 
-        System.out.println("REST petition with time " + time);
+        System.out.println("REST petition with time " + time); //TODO: DEL?
         tableViewController.setTime(time); //TODO: DO
     }
 

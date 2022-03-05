@@ -156,7 +156,8 @@ public class CalendarViewController implements BaseController{
     @FXML
     public void onCalendarDayAction (ActionEvent event) {
         System.out.println("Button pressed");
-        LocalDate date = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, Integer.parseInt(((Button)event.getSource()).getText()));
+        LocalDate date = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
+                Integer.parseInt(((Button)event.getSource()).getText()));
         actualDateString = date.toString();
         System.out.println("REST petition with date " + date);
         tableViewController.setDate(date);

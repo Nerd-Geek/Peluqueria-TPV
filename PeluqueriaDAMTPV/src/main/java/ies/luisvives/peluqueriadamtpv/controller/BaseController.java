@@ -1,5 +1,8 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
+/**
+ * Interface base for the controllers
+ */
 public interface BaseController {
-    //interface base para los controladores
+    //Empty
 }

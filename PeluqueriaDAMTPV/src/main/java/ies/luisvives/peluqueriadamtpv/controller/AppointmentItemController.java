@@ -1,7 +1,6 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
 import ies.luisvives.peluqueriadamtpv.model.Appointment;
-import ies.luisvives.peluqueriadamtpv.model.Service;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

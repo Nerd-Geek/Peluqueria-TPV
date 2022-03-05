@@ -36,7 +36,7 @@ public class TableViewController implements BaseController, Initializable, Callb
     private int type = -1;
 
     @FXML
-    TableView<TableEntity> table;
+    private TableView<TableEntity> table;
 
     private List<TableEntity> elements;
 
@@ -55,7 +55,7 @@ public class TableViewController implements BaseController, Initializable, Callb
     @FXML
     private Button delete_button;
 
-	private String searchQuery;
+    private String searchQuery;
 
     private String serviceId;
 
@@ -63,8 +63,8 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     private LocalTime time;
 
-	public TableViewController() {
-		searchQuery = "";
+    public TableViewController() {
+        searchQuery = "";
         serviceId = null;
         date = null;
         time = null;
@@ -83,11 +83,11 @@ public class TableViewController implements BaseController, Initializable, Callb
         column5.setSortType(TableColumn.SortType.DESCENDING);
         column6.setSortType(TableColumn.SortType.DESCENDING);
         column7.setSortType(TableColumn.SortType.DESCENDING);
-	}
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        //empty
     }
 
     @FXML
@@ -122,7 +122,7 @@ public class TableViewController implements BaseController, Initializable, Callb
                     System.err.println("Delete not done");
                 }
             }
-        }else{
+        } else {
             notSelectedItemAlert();
         }
     }
@@ -164,7 +164,7 @@ public class TableViewController implements BaseController, Initializable, Callb
 
                 Optional<Node> opt = Optional.empty();
 
-                switch(this.type) {
+                switch (this.type) {
                     case APPOINTMENT:
                         Appointment appointment = APIRestConfig.getAppointmentsService().appointmentGetById(elementId).execute().body();
                         opt = Util.fxmlLoaderSetController("appointment_item_view", new AppointmentItemController(appointment));
@@ -180,26 +180,26 @@ public class TableViewController implements BaseController, Initializable, Callb
                 }
 
                 //Load dialog
-                if (opt.isPresent()){
+                if (opt.isPresent()) {
                     pane.setContent(opt.get());
                     dialog.setDialogPane(pane);
                     dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
                     dialog.showAndWait();
-                }else{
+                } else {
                     System.err.println(Util.getString("error.loading"));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-		}else{
+        } else {
             notSelectedItemAlert();
         }
-	}
+    }
 
-	public void setSearchQuery(String searchQuery) {
-		this.searchQuery = searchQuery;
+    public void setSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
         refreshTable();
-	}
+    }
 
     public void setDate(LocalDate date) {
         this.date = date;
@@ -210,8 +210,8 @@ public class TableViewController implements BaseController, Initializable, Callb
         this.serviceId = serviceId;
     }
 
-	public void refreshTable() {
-        switch(this.type) {
+    public void refreshTable() {
+        switch (this.type) {
             case APPOINTMENT:
                 updateAppointmentItems();
                 break;
@@ -222,12 +222,11 @@ public class TableViewController implements BaseController, Initializable, Callb
                 updateServiceItems();
                 break;
         }
-	}
-
+    }
 
 
     public void setEntityForTable(int type) {
-        switch(type) {
+        switch (type) {
             case APPOINTMENT:
                 loadAppointmentTypeTable();
                 this.type = APPOINTMENT;
@@ -248,7 +247,7 @@ public class TableViewController implements BaseController, Initializable, Callb
             Response<List<Appointment>> response = APIRestConfig
                     .getAppointmentsService()
                     .appointmentFindByDateAndUser_UsernameContainsIgnoreCaseAndService_Id(searchQuery, date, serviceId)
-                    .execute(); //TODO: add the time query
+                    .execute(); //TODO: add the time query?
             if (response.body() != null) {
                 AppointmentListMapper mapper = new AppointmentListMapper();
                 ObservableList<TableEntity> appointments =
@@ -286,13 +285,13 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     private void loadAppointmentTypeTable() {
         column1.setCellValueFactory(new PropertyValueFactory<>("user"));
-        column1.setText("username");
+        column1.setText(Util.getString("text.username"));
         column2.setCellValueFactory(new PropertyValueFactory<>("service"));
-        column2.setText("service");
+        column2.setText(Util.getString("text.service"));
         column3.setCellValueFactory(new PropertyValueFactory<>("time"));
-        column3.setText("time");
+        column3.setText(Util.getString("text.hour"));
         column4.setCellValueFactory(new PropertyValueFactory<>("date"));
-        column4.setText("date");
+        column4.setText(Util.getString("text.date"));
         table.getColumns().add(column1);
         table.getColumns().add(column2);
         table.getColumns().add(column3);
@@ -302,15 +301,15 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     private void loadServiceTypeTable() {
         column1.setCellValueFactory(new PropertyValueFactory<>("name"));
-        column1.setText("name");
+        column1.setText(Util.getString("text.username"));
         column2.setCellValueFactory(new PropertyValueFactory<>("description"));
-        column2.setText("description");
+        column2.setText(Util.getString("text.description"));
         column3.setCellValueFactory(new PropertyValueFactory<>("price"));
-        column3.setText("price");
+        column3.setText(Util.getString("text.price"));
         column4.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        column4.setText("stock");
+        column4.setText(Util.getString("text.stock"));
         column5.setCellValueFactory(new PropertyValueFactory<>("image"));
-        column5.setText("image");
+        column5.setText(Util.getString("text.picturePath"));
         table.getColumns().add(column1);
         table.getColumns().add(column2);
         table.getColumns().add(column3);
@@ -321,19 +320,19 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     private void loadUserTypeTable() {
         column1.setCellValueFactory(new PropertyValueFactory<>("username"));
-        column1.setText("username");
+        column1.setText(Util.getString("text.username"));
         column2.setCellValueFactory(new PropertyValueFactory<>("name"));
-        column2.setText("name");
+        column2.setText(Util.getString("text.name"));
         column3.setCellValueFactory(new PropertyValueFactory<>("surname"));
-        column3.setText("surname");
+        column3.setText(Util.getString("text.surname"));
         column4.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
-        column4.setText("telephone");
+        column4.setText(Util.getString("text.telephone"));
         column5.setCellValueFactory(new PropertyValueFactory<>("email"));
-        column5.setText("email");
+        column5.setText(Util.getString("text.email"));
         column6.setCellValueFactory(new PropertyValueFactory<>("gender"));
-        column6.setText("gender");
+        column6.setText(Util.getString("text.gender"));
         column7.setCellValueFactory(new PropertyValueFactory<>("image"));
-        column7.setText("image");
+        column7.setText(Util.getString("text.picturePath"));
         table.getColumns().add(column1);
         table.getColumns().add(column2);
         table.getColumns().add(column3);

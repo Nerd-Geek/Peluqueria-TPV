@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SettingsController implements BaseController{
+public class SettingsController implements BaseController {
     @FXML
     private VBox content;
     @FXML

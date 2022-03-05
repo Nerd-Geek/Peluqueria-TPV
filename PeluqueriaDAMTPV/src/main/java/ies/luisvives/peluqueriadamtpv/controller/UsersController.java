@@ -37,7 +37,7 @@ public class UsersController implements BaseController, Initializable, Callback 
     @FXML
     private TextField imageTextField;
     @FXML
-    private ChoiceBox<String> gender_choice_box;
+    private ChoiceBox<String> genderChoiceBox;
     @FXML
     private HBox tableView;
     @FXML
@@ -88,7 +88,7 @@ public class UsersController implements BaseController, Initializable, Callback 
         user.setPassword(passwordTextField.getText());
         user.setPhoneNumber(telephoneTextField.getText());
         user.setEmail(emailTextField.getText());
-        user.setGender(UserGender.valueOf(gender_choice_box.getValue()));
+        user.setGender(UserGender.valueOf(genderChoiceBox.getValue()));
         user.setImage(imageTextField.getText());
 
         APIRestConfig.getUsersService().insertUsers(user).execute();

@@ -5,10 +5,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 public class ServiceItemController implements BaseController {
-    @FXML private Label nameService;
-    @FXML private Label descriptionService;
-    @FXML private Label priceService;
-    @FXML private Label stockService;
+    @FXML
+    private Label nameService;
+    @FXML
+    private Label descriptionService;
+    @FXML
+    private Label priceService;
+    @FXML
+    private Label stockService;
+
     private Service service;
 
     public ServiceItemController(Service service) {

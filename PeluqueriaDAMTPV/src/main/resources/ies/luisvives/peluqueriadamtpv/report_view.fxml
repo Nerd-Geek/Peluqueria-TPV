@@ -9,7 +9,7 @@
          <children>
             <HBox VBox.vgrow="ALWAYS">
                <children>
-                  <BarChart fx:id="genderFemale" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                  <BarChart fx:id="serviceHigherChart" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -17,7 +17,7 @@
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </BarChart>
-                  <PieChart fx:id="serviceHigher" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                  <PieChart fx:id="genderChart" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
                </children>
             </HBox>
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">

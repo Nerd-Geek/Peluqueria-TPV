@@ -7,26 +7,19 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class ServiceController implements BaseController{
+public class ServiceController implements BaseController {
     @FXML
-    TextField stockService;
+    private HBox tableView;
     @FXML
-    TextField priceService;
+    private TableViewController tableViewController;
     @FXML
-    TextField descriptionService;
+    private VBox insertEntityView;
     @FXML
-    TextField nombreService;
-    @FXML
-    HBox tableView;
-    @FXML
-    TableViewController tableViewController;
-    @FXML
-    VBox insertEntityView;
-    @FXML
-    InsertEntityViewController insertEntityViewController;
+    private InsertEntityViewController insertEntityViewController;
 
     private String searchQuery;
-//    @FXML
+
+    //    @FXML
 //    TableView<Service> listService;
 //
 //    private final TableColumn<Service, String> name = new TableColumn("name");
@@ -51,7 +44,8 @@ public class ServiceController implements BaseController{
     public void setSearchQuery(String searchQuery) {
         tableViewController.setSearchQuery(searchQuery);
     }
-//
+
+    //
 //    @FXML
 //    public void onTableItemService() {
 //        try {
