@@ -68,14 +68,14 @@
         </VBox>
         <Pane prefHeight="200.0" prefWidth="200.0">
             <children>
-                <HBox fx:id="search_box" alignment="TOP_CENTER" fillHeight="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                <HBox fx:id="searchBox" alignment="TOP_CENTER" fillHeight="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                     <children>
                         <TextField fx:id="searchField" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" promptText="%title.search" HBox.hgrow="ALWAYS">
                             <HBox.margin>
                                 <Insets left="20.0" />
                             </HBox.margin>
                         </TextField>
-                        <Button fx:id="search_button" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#refreshSearch" text="%title.search">
+                        <Button fx:id="searchButton" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#refreshSearch" text="%title.search">
                             <HBox.margin>
                                 <Insets right="20.0" />
                             </HBox.margin>

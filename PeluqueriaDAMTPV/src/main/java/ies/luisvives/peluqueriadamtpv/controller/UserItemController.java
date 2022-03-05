@@ -20,11 +20,11 @@ public class UserItemController implements BaseController {
     @FXML
     public void initialize() {
         // TODO: Arreglar - Da NullPointerException
-//        usernameUser.setText(user.getUsername());
-//        nameUser.setText(user.getName());
-//        surnameUser.setText(user.getSurname());
-//        phoneUser.setText(user.getPhoneNumber());
-//        emailUser.setText(user.getEmail());
-//        genderUser.setText(user.getGender().toString());
+        usernameUser.setText(user.getUsername());
+        nameUser.setText(user.getName());
+        surnameUser.setText(user.getSurname());
+        phoneUser.setText(user.getPhoneNumber());
+        emailUser.setText(user.getEmail());
+        genderUser.setText(user.getGender().toString());
     }
 }

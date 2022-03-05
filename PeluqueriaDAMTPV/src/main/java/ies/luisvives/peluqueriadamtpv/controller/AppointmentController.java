@@ -8,7 +8,6 @@ import ies.luisvives.peluqueriadamtpv.utils.Util;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -109,22 +108,44 @@ public class AppointmentController implements BaseController{
 
     @FXML
     public void createAppointment() throws IOException {
-        Dialog dialog = new Dialog();
-        DialogPane pane = new DialogPane();
-
-        Optional<Appointment> appointment = appointmentCreate();
-        if (appointment.isPresent()){
-            Optional<Node> opt = Util.fxmlLoaderSetController("appointment-create-view",
-                    new CreateAppointmentController(appointment.get()));
-            if (opt.isPresent()){
-                pane.setContent(opt.get());
-                dialog.setDialogPane(pane);
-                dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-                dialog.showAndWait();
-            }else{
-                System.err.println(Util.getString("error.loading"));
+            Optional<Appointment> appointmentOpt = appointmentCreate();
+            if (appointmentOpt.isPresent()){
+                Appointment appointment = appointmentOpt.get();
+                appointment.setId(UUID.randomUUID().toString()); //TODO: why UUID set here? - vulnerability
+                if (confirmInsertDialog(appointment)){
+                    Appointment inserted = APIRestConfig.getAppointmentsService().insertAppointments(appointment).execute().body();
+                    if (inserted != null && APIRestConfig.getAppointmentsService().appointmentGetById(inserted.getId()) != null){
+                        showAlert(Alert.AlertType.INFORMATION, Util.getString("title.info"), Util.getString("text.appointmentCreated"));
+                    }else{
+                        showAlert(Alert.AlertType.ERROR, Util.getString("title.error"), Util.getString("error.appointmentNotCreated"));
+                    }
+                }
             }
-        }
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String infoMsg) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(infoMsg);
+        alert.showAndWait();
+    }
+
+    private boolean confirmInsertDialog(Appointment appointment) {
+        User user = appointment.getUser();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        String content = Util.getString("text.makeAppointmentQuestion") + "\n\n" +
+                "• " + Util.getString("text.date") + ": " + appointment.getDate() + "\n" +
+                "• " + Util.getString("text.hour") + ": " + appointment.getTime() + "\n" +
+                "• " + Util.getString("text.service") + ": " + appointment.getService().getName() + "\n" +
+                "• " + Util.getString("text.username") + ": " + user.getUsername()+" ("+user.getName()+" "+user.getSurname() + ")\n\n";
+        alert.setTitle(Util.getString("text.create"));
+        alert.setContentText(content);
+        alert.showAndWait();
+        if (alert.getResult().getButtonData().isDefaultButton())
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -146,15 +167,16 @@ public class AppointmentController implements BaseController{
             ap.setTime(time.get());
             ap.setUser(user.get());
             ap.setService(service.get());
-            appointment = Optional.of(new Appointment());
+            appointment = Optional.of(ap);
         }
+
         return appointment;
     }
 
     private Optional<String> getTime() {
         Optional<String> str = hourViewController.getActualTimeString();
         if (str.isEmpty()){
-            alertNoConditionToCreate(Util.getString("error.noTimeSet"));
+            showAlert(Alert.AlertType.INFORMATION, Util.getString("title.info"), Util.getString("error.noTimeSet"));
         }
         return str;
     }
@@ -162,7 +184,7 @@ public class AppointmentController implements BaseController{
     private Optional<String> getDate() {
         Optional<String> str = calendarViewController.getActualDateString();
         if (str.isEmpty()){
-            alertNoConditionToCreate(Util.getString("error.noDateSet"));
+            showAlert(Alert.AlertType.INFORMATION, Util.getString("title.info"), Util.getString("error.noDateSet"));
         }
         return str;
     }
@@ -175,7 +197,7 @@ public class AppointmentController implements BaseController{
     private Optional<Service> getService() {
         Optional<Service> service = Optional.empty();
         if (services.isEmpty()){
-            alertNoConditionToCreate(Util.getString("text.noServices"));
+            showAlert(Alert.AlertType.INFORMATION, Util.getString("title.info"), Util.getString("text.noServices"));
         }else{
             service = Optional.of(services.get(actualServiceSelected));
         }
@@ -203,7 +225,7 @@ public class AppointmentController implements BaseController{
         }
 
         //Show alert if error msg and return result
-        errorMsg.ifPresent(this::alertNoConditionToCreate);
+        errorMsg.ifPresent(e -> showAlert(Alert.AlertType.INFORMATION, Util.getString("title.info"), e));
         return userOpt;
     }
 
@@ -232,18 +254,6 @@ public class AppointmentController implements BaseController{
             }
         }
         return usersSuggestionMsg.toString();
-    }
-
-    /**
-     * Pop up an alert
-     * @param infoMsg Content Text of alert
-     */
-    private void alertNoConditionToCreate(String infoMsg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(Util.getString("title.info"));
-        alert.setHeaderText(null);
-        alert.setContentText(infoMsg);
-        alert.showAndWait();
     }
 
     /**

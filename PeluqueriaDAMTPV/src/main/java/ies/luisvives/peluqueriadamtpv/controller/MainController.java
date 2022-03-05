@@ -25,7 +25,7 @@ public class MainController implements BaseController {
     @FXML
     private ToggleButton mainViewSideMenuButtonAppointments, mainViewSideMenuButtonUsers, mainViewSideMenuButtonServices, mainViewSideMenuButtonReports, mainViewSideMenuButtonSettings;
     @FXML
-    private HBox search_box;
+    private HBox searchBox;
     @FXML
     private TextField searchField;
     @FXML
@@ -38,8 +38,7 @@ public class MainController implements BaseController {
     public void initialize() {
         mainPane.getStylesheets().add(Objects.requireNonNull(this.getClass()
                 .getResource(Util.PACKAGE_DIR + "themes/style_" +
-                        UserConfiguration.getInstance().getActualTheme().toLowerCase()
-                        + ".css")).toExternalForm());
+                        UserConfiguration.getInstance().getActualTheme().toLowerCase() + ".css")).toExternalForm());
 
         searchField.setOnKeyPressed(k -> refreshSearch());
     }
@@ -49,7 +48,7 @@ public class MainController implements BaseController {
         if (mainViewSideMenuButtonAppointments.isSelected()) {
             includedViewAppointments.setVisible(true);
             includedViewAppointments.setDisable(false);
-            search_box.setVisible(true);
+            searchBox.setVisible(true);
             mainViewSideMenuButtonAppointments.setDisable(true);
             animateToggleButton(mainViewSideMenuButtonAppointments);
         } else {
@@ -61,7 +60,7 @@ public class MainController implements BaseController {
         if (mainViewSideMenuButtonUsers.isSelected()) {
             includedViewUsers.setVisible(true);
             includedViewUsers.setDisable(false);
-            search_box.setVisible(true);
+            searchBox.setVisible(true);
             mainViewSideMenuButtonUsers.setDisable(true);
             animateToggleButton(mainViewSideMenuButtonUsers);
         } else {
@@ -73,7 +72,7 @@ public class MainController implements BaseController {
         if (mainViewSideMenuButtonServices.isSelected()) {
             includedViewServices.setVisible(true);
             includedViewServices.setDisable(false);
-            search_box.setVisible(true);
+            searchBox.setVisible(true);
             mainViewSideMenuButtonServices.setDisable(true);
             animateToggleButton(mainViewSideMenuButtonServices);
         } else {
@@ -85,7 +84,7 @@ public class MainController implements BaseController {
         if (mainViewSideMenuButtonReports.isSelected()) {
             includedViewReports.setVisible(true);
             includedViewReports.setDisable(false);
-            search_box.setVisible(false);
+            searchBox.setVisible(false);
             mainViewSideMenuButtonReports.setDisable(true);
             animateToggleButton(mainViewSideMenuButtonReports);
         } else {
@@ -97,7 +96,7 @@ public class MainController implements BaseController {
         if (mainViewSideMenuButtonSettings.isSelected()) {
             includedViewSettings.setVisible(true);
             includedViewSettings.setDisable(false);
-            search_box.setVisible(false);
+            searchBox.setVisible(false);
             mainViewSideMenuButtonSettings.setDisable(true);
             animateToggleButton(mainViewSideMenuButtonSettings);
         } else {
