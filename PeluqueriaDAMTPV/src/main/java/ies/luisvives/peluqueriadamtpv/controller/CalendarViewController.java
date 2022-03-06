@@ -1,5 +1,7 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -108,11 +110,15 @@ public class CalendarViewController implements BaseController{
     @FXML
     private TableViewController tableViewController;
 
-    private String actualDateString = "";
+    private StringProperty actualDateString = new SimpleStringProperty("");
 
     public CalendarViewController() {
         gridButtons = new ArrayList<>();
         calendar = Calendar.getInstance();
+    }
+
+    public StringProperty getActualDateStringProperty(){
+        return actualDateString;
     }
 
     @FXML
@@ -158,7 +164,7 @@ public class CalendarViewController implements BaseController{
         System.out.println("Button pressed");
         LocalDate date = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
                 Integer.parseInt(((Button)event.getSource()).getText()));
-        actualDateString = date.toString();
+        actualDateString.set(date.toString());
         System.out.println("REST petition with date " + date);
         tableViewController.setDate(date);
     }
@@ -225,10 +231,10 @@ public class CalendarViewController implements BaseController{
     }
 
     public Optional<String> getActualDateString() {
-        if (Objects.equals(actualDateString, "")){
+        if (Objects.equals(actualDateString.get(), "")){
             return Optional.empty();
         }else{
-            return Optional.of(actualDateString);
+            return Optional.of(actualDateString.get());
         }
     }
 }

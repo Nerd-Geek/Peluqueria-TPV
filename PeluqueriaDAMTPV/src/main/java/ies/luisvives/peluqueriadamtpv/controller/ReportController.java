@@ -10,16 +10,22 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import retrofit2.Response;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ReportController implements BaseController, Initializable{
     @FXML private PieChart genderChart;
     @FXML private BarChart serviceHigherChart;
+    @FXML private LineChart incomeAmount;
+    @FXML private BarChart numberAppointments;
+
     private ObservableList<Service> listService = FXCollections.observableArrayList();
     private ObservableList<Appointment> listAppointments = FXCollections.observableArrayList();
     private ObservableList<User> listUsers = FXCollections.observableArrayList();
@@ -32,8 +38,61 @@ public class ReportController implements BaseController, Initializable{
 
     private void initCharts() {
         configGenderChart();
-        configServiceHigherChart();
-        //TODO: MORE CHARTS
+        configServiceChart();
+        configIncomeAmountChart();
+        configNumberAppointmentsChart();
+    }
+
+    private void configNumberAppointmentsChart() {
+        numberAppointments.setTitle(Util.getString("title.appointments"));
+        //Stock
+        XYChart.Series<String, Number> seriesStock = new XYChart.Series<>();
+        seriesStock.setName(Util.getString("text.stock"));
+
+        //Appointment amount
+        XYChart.Series<String, Number> seriesAppointmentAmount = new XYChart.Series<>();
+        seriesAppointmentAmount.setName(Util.getString("text.appointmentAmount"));
+
+        for (Service s: listService){
+            List<String> appointmentsServices = listAppointments.stream().map(e -> e.getService().getName()).collect(Collectors.toList());
+            int amountOfAppointments = Collections.frequency(appointmentsServices, s.getName());
+            seriesStock.getData().add(new XYChart.Data<>(s.getName(), s.getStock()));
+            seriesAppointmentAmount.getData().add(new XYChart.Data<>(s.getName(), amountOfAppointments));
+        }
+
+        numberAppointments.getData().add(seriesStock);
+        numberAppointments.getData().add(seriesAppointmentAmount);
+    }
+
+    private void configIncomeAmountChart() {
+        incomeAmount.setTitle(Util.getString("title.incomeAmount"));
+        listAppointments.forEach(e -> {
+            for (int m = 1; m <= 12; m++){
+                XYChart.Series<String, Number> series = new XYChart.Series<>();
+                series.setName(m + "");
+                countIncomeAmountInMonth(m).forEach((day, amount) -> {
+                    String dayStr = String.format("%02d",day);
+                    series.getData().add(new XYChart.Data<>(dayStr, amount));
+                });
+                incomeAmount.getData().add(series);
+            }
+        });
+    }
+
+    private int getMaxDayOfMonth(int actualMonth, int actualYear) {
+        int maxDays = 31; //1, 3, 5, 7, 8, 10, 12
+        if (actualMonth == 4 || actualMonth == 6 || actualMonth == 9 || actualMonth == 11){
+            maxDays = 30;
+        }
+        if (actualMonth == 2){
+            //Check if is leap year
+            if ((actualYear % 4 == 0) && ((actualYear % 100 != 0) || (actualYear % 400 == 0))){
+                maxDays = 29;
+            }else{
+                maxDays = 28;
+            }
+        }
+        return maxDays;
     }
 
     private void loadData() {
@@ -100,7 +159,7 @@ public class ReportController implements BaseController, Initializable{
         serviceHigherChart.verticalGridLinesVisibleProperty();
     }
 
-    public void configServiceHigherChart() {
+    public void configServiceChart() {
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
         Map<String, Integer> map = countAppointmentsService();
         map.forEach((s, q) -> pieChartData.add(new PieChart.Data(s,q)));
@@ -111,7 +170,7 @@ public class ReportController implements BaseController, Initializable{
 
     /**
      * Return a map | Key = Services | Value = Number of times it appears in services
-     * @return Map of 'service name' as key and 'number of times it appears in services' as Integer
+     * @return Map of 'service name' as key (String) and 'number of times it appears in services' as value (Integer)
      */
     private Map<String, Integer> countAppointmentsService() {
         Map<String, Integer> map = new HashMap<>();
@@ -122,6 +181,31 @@ public class ReportController implements BaseController, Initializable{
             int count = Collections.frequency(servicesNames, service.getName());
             map.put(service.getName(), count);
         }
+        return map;
+    }
+
+    /**
+     * Return a map | Key = Day | Value = Amount of money
+     * @return Map of 'days in actual month' as key (Integer) and 'number of amount of income money in that day' as value (Double)
+     */
+    private Map<Integer, Double> countIncomeAmountInMonth(int month) {
+        Map<Integer, Double> map = new HashMap<>();
+        int actualYear = LocalDate.now().getYear();
+
+        //Add day keys
+        for (int n = 1; n <= getMaxDayOfMonth(month,actualYear); n++){
+            map.put(n, 0.0);
+        }
+
+        //Add amount of money
+        listAppointments.forEach(e -> {
+            String[] appointmentDate = e.getDate().split("-");
+            //Check actual year and month
+            if (Integer.parseInt(appointmentDate[0]) == actualYear && Integer.parseInt(appointmentDate[1]) == month){
+                int dayKey = Integer.parseInt(appointmentDate[2]);
+                map.put(dayKey, map.get(dayKey) + e.getService().getPrice());
+            }
+        });
         return map;
     }
 

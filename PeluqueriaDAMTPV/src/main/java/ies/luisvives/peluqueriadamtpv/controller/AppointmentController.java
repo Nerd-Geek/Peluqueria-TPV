@@ -53,9 +53,8 @@ public class AppointmentController implements BaseController{
         tableViewController.setSearchQuery("");
         tableViewController.setEntityForTable(TableViewController.APPOINTMENT);
         calendarViewController.setTableViewController(tableViewController);
-        hourViewController.setTableViewController(tableViewController);
+        hourViewController.setExternalData(tableViewController, calendarViewController.getActualDateStringProperty());
         initServices();
-
         usernameField.setOnAction(e -> {
             try {
                 createAppointment();
@@ -156,10 +155,15 @@ public class AppointmentController implements BaseController{
     private Optional<Appointment> appointmentCreate() throws IOException {
         Optional<Appointment> appointment = Optional.empty();
         Optional<String> date = getDate();
-        Optional<String> time = getTime();
-        Optional<User> user = getUser();
+        Optional<String> time = Optional.empty();
+        Optional<User> user = Optional.empty();
         Optional<Service> service = getService();
-
+        if (date.isPresent()){
+            time = getTime();
+            if (time.isPresent()){
+                user = getUser();
+            }
+        }
         if (date.isPresent() && time.isPresent() && user.isPresent() && service.isPresent()){
             Appointment ap = new Appointment();
             ap.setId(UUID.randomUUID().toString()); //TODO: why UUID set here? - vulnerability

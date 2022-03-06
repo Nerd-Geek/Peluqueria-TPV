@@ -1,5 +1,6 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -52,6 +53,7 @@ public class HourViewController {
     private String actualTimeString = "";
 
     private TableViewController tableViewController;
+    private StringProperty actualDate;
 
 
     @FXML
@@ -76,13 +78,16 @@ public class HourViewController {
     @FXML
     protected void onButtonHourPressed(ActionEvent event) {
         Button b = (Button) event.getSource();
-        actualTimeString = b.getText();
 
-        System.out.println("Button pressed"); //TODO: DEL?
-        LocalTime time = stringToTime(actualTimeString);
+        //TODO: TEST
+        if (!Objects.equals(actualDate.get(), "")){
+            actualTimeString = b.getText();
+            System.out.println("Button pressed"); //TODO: DEL?
+            LocalTime time = stringToTime(actualTimeString);
 
-        System.out.println("REST petition with time " + time); //TODO: DEL?
-        tableViewController.setTime(time); //TODO: DO
+            System.out.println("REST petition with time " + time); //TODO: DEL?
+            tableViewController.setTime(time); //TODO: DO
+        }
     }
 
     private LocalTime stringToTime(String str) {
@@ -92,12 +97,14 @@ public class HourViewController {
         return LocalTime.of(selectedHour, selectedMinute);
     }
 
-    private int getMinuteFromButton(String str) {
+    private int getMinuteFromButton(String str) { //TODO: DEL?
         return Integer.parseInt(str.split(":")[1]);
     }
 
-    public void setTableViewController(TableViewController tableViewController) {
+    public void setExternalData(TableViewController tableViewController, StringProperty actualDate) {
         this.tableViewController = tableViewController;
+        this.actualDate = actualDate;
+        this.actualDate.addListener(e -> this.refreshHoursTable());
     }
 
     public Optional<String> getActualTimeString(){
@@ -106,6 +113,11 @@ public class HourViewController {
         }else{
             return Optional.of(this.actualTimeString);
         }
+    }
+
+    public void refreshHoursTable(){
+        actualTimeString = "";
+        updateHoursTable();
     }
 
     private void updateHoursTable() {
