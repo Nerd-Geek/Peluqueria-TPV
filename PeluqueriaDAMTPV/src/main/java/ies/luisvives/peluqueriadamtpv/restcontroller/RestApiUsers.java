@@ -8,25 +8,25 @@ import java.util.List;
 
 public interface RestApiUsers {
 
-    @GET("users")
-    Call<List<User>> usersGetAll();
+    @GET(APIRestConfig.API_PATH + "/users/")
+    Call<List<User>> usersGetAll(@Header("Authorization") String token);
 
-    @GET("users")
-    Call<List<User>> userGetAllWithUser_name(@Query("searchQuery") String searchQuery);
+    @GET(APIRestConfig.API_PATH + "/users/")
+    Call<List<User>> userGetAllWithUser_name(@Header("Authorization") String token, @Query("searchQuery") String searchQuery);
 
-    @GET("user/{username}")
-    Call<User> findByUsername(@Path("username") String username);
+    @GET(APIRestConfig.API_PATH + "/user/{username}")
+    Call<User> findByUsername(@Header("Authorization") String token, @Path("username") String username);
 
-    @GET("users/{id}")
-    Call<User> usersGetById(@Path("id") String id);
+    @GET(APIRestConfig.API_PATH + "/users/{id}")
+    Call<User> usersGetById(@Header("Authorization") String token, @Path("id") String id);
 
-    @POST("users")
-    Call<User> insertUsers(@Body User user);
+    @POST(APIRestConfig.API_PATH + "/users/")
+    Call<User> insertUsers(@Header("Authorization") String token, @Body User user);
 
-    @PUT("users/{id}")
-    Call<User> updateUsers();
+    @PUT(APIRestConfig.API_PATH + "/users/{id}")
+    Call<User> updateUsers(@Header("Authorization") String token);
 
-    @DELETE("users/{id}")
-    Call<User> deleteUser(@Path("id") String id);
+    @DELETE(APIRestConfig.API_PATH + "/users/{id}")
+    Call<User> deleteUser(@Header("Authorization") String token, @Path("id") String id);
 
 }

@@ -91,8 +91,8 @@ public class UsersController implements BaseController, Initializable, Callback 
         user.setGender(UserGender.valueOf(genderChoiceBox.getValue()));
         user.setImage(imageTextField.getText());
 
-        APIRestConfig.getUsersService().insertUsers(user).execute();
-        Response<List<User>> usersList = Objects.requireNonNull(APIRestConfig.getUsersService().usersGetAll().execute());
+        APIRestConfig.getUsersService().insertUsers(APIRestConfig.token, user).execute();
+        Response<List<User>> usersList = Objects.requireNonNull(APIRestConfig.getUsersService().usersGetAll(APIRestConfig.token).execute());
         if (usersList.body() != null) {
             users.addAll(usersList.body());
 //            listUsers.setItems(users);

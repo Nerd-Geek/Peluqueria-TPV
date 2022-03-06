@@ -107,13 +107,13 @@ public class TableViewController implements BaseController, Initializable, Callb
                 try {
                     switch (type) {
                         case APPOINTMENT:
-                            APIRestConfig.getAppointmentsService().deleteAppointmentById(elementId).execute();
+                            APIRestConfig.getAppointmentsService().deleteAppointmentById(APIRestConfig.token, elementId).execute();
                             break;
                         case USER:
-                            APIRestConfig.getUsersService().deleteUser(elementId).execute();
+                            APIRestConfig.getUsersService().deleteUser(APIRestConfig.token, elementId).execute();
                             break;
                         case SERVICE:
-                            APIRestConfig.getServicesService().deleteService(elementId).execute();
+                            APIRestConfig.getServicesService().deleteService(APIRestConfig.token, elementId).execute();
                             break;
                     }
                     table.getItems().remove(table.getSelectionModel().getFocusedIndex());
@@ -166,15 +166,15 @@ public class TableViewController implements BaseController, Initializable, Callb
 
                 switch (this.type) {
                     case APPOINTMENT:
-                        Appointment appointment = APIRestConfig.getAppointmentsService().appointmentGetById(elementId).execute().body();
+                        Appointment appointment = APIRestConfig.getAppointmentsService().appointmentGetById(APIRestConfig.token, elementId).execute().body();
                         opt = Util.fxmlLoaderSetController("appointment_item_view", new AppointmentItemController(appointment));
                         break;
                     case USER:
-                        User user = APIRestConfig.getUsersService().usersGetById(elementId).execute().body();
+                        User user = APIRestConfig.getUsersService().usersGetById(APIRestConfig.token, elementId).execute().body();
                         opt = Util.fxmlLoaderSetController("user_item_view", new UserItemController(user)); //TODO: Same as other - why NullPointerException?
                         break;
                     case SERVICE:
-                        Service service = APIRestConfig.getServicesService().serviceGetById(elementId).execute().body();
+                        Service service = APIRestConfig.getServicesService().serviceGetById(APIRestConfig.token, elementId).execute().body();
                         opt = Util.fxmlLoaderSetController("service_item_view", new ServiceItemController(service));
                         break;
                 }
@@ -246,7 +246,7 @@ public class TableViewController implements BaseController, Initializable, Callb
         try {
             Response<List<Appointment>> response = APIRestConfig
                     .getAppointmentsService()
-                    .appointmentFindByDateAndUser_UsernameContainsIgnoreCaseAndService_Id(searchQuery, date, serviceId)
+                    .appointmentFindByDateAndUser_UsernameContainsIgnoreCaseAndService_Id(APIRestConfig.token, searchQuery, date, serviceId)
                     .execute(); //TODO: add the time query?
             if (response.body() != null) {
                 AppointmentListMapper mapper = new AppointmentListMapper();
@@ -261,7 +261,7 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     private void updateServiceItems() {
         try {
-            Response<List<Service>> response = APIRestConfig.getServicesService().serviceGetAllWithService_name(searchQuery).execute();
+            Response<List<Service>> response = APIRestConfig.getServicesService().serviceGetAllWithService_name(APIRestConfig.token, searchQuery).execute();
             if (response.body() != null) {
                 ObservableList<TableEntity> services = FXCollections.observableArrayList((response.body()));
                 table.setItems(services);
@@ -273,7 +273,7 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     private void updateUserItems() {
         try {
-            Response<List<User>> response = APIRestConfig.getUsersService().userGetAllWithUser_name(searchQuery).execute();
+            Response<List<User>> response = APIRestConfig.getUsersService().userGetAllWithUser_name(APIRestConfig.token, searchQuery).execute();
             if (response.body() != null) {
                 ObservableList<TableEntity> users = FXCollections.observableArrayList((response.body()));
                 table.setItems(users);

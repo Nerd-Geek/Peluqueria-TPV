@@ -20,11 +20,15 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ReportController implements BaseController, Initializable{
-    @FXML private PieChart genderChart;
-    @FXML private BarChart serviceHigherChart;
-    @FXML private LineChart incomeAmount;
-    @FXML private BarChart numberAppointments;
+public class ReportController implements BaseController, Initializable {
+    @FXML
+    private PieChart genderChart;
+    @FXML
+    private BarChart serviceHigherChart;
+    @FXML
+    private LineChart incomeAmount;
+    @FXML
+    private BarChart numberAppointments;
 
     private ObservableList<Service> listService = FXCollections.observableArrayList();
     private ObservableList<Appointment> listAppointments = FXCollections.observableArrayList();
@@ -53,7 +57,7 @@ public class ReportController implements BaseController, Initializable{
         XYChart.Series<String, Number> seriesAppointmentAmount = new XYChart.Series<>();
         seriesAppointmentAmount.setName(Util.getString("text.appointmentAmount"));
 
-        for (Service s: listService){
+        for (Service s : listService) {
             List<String> appointmentsServices = listAppointments.stream().map(e -> e.getService().getName()).collect(Collectors.toList());
             int amountOfAppointments = Collections.frequency(appointmentsServices, s.getName());
             seriesStock.getData().add(new XYChart.Data<>(s.getName(), s.getStock()));
@@ -67,11 +71,11 @@ public class ReportController implements BaseController, Initializable{
     private void configIncomeAmountChart() {
         incomeAmount.setTitle(Util.getString("title.incomeAmount"));
         listAppointments.forEach(e -> {
-            for (int m = 1; m <= 12; m++){
+            for (int m = 1; m <= 12; m++) {
                 XYChart.Series<String, Number> series = new XYChart.Series<>();
                 series.setName(m + "");
                 countIncomeAmountInMonth(m).forEach((day, amount) -> {
-                    String dayStr = String.format("%02d",day);
+                    String dayStr = String.format("%02d", day);
                     series.getData().add(new XYChart.Data<>(dayStr, amount));
                 });
                 incomeAmount.getData().add(series);
@@ -81,14 +85,14 @@ public class ReportController implements BaseController, Initializable{
 
     private int getMaxDayOfMonth(int actualMonth, int actualYear) {
         int maxDays = 31; //1, 3, 5, 7, 8, 10, 12
-        if (actualMonth == 4 || actualMonth == 6 || actualMonth == 9 || actualMonth == 11){
+        if (actualMonth == 4 || actualMonth == 6 || actualMonth == 9 || actualMonth == 11) {
             maxDays = 30;
         }
-        if (actualMonth == 2){
+        if (actualMonth == 2) {
             //Check if is leap year
-            if ((actualYear % 4 == 0) && ((actualYear % 100 != 0) || (actualYear % 400 == 0))){
+            if ((actualYear % 4 == 0) && ((actualYear % 100 != 0) || (actualYear % 400 == 0))) {
                 maxDays = 29;
-            }else{
+            } else {
                 maxDays = 28;
             }
         }
@@ -104,7 +108,7 @@ public class ReportController implements BaseController, Initializable{
     private void loadServices() {
         try {
             Response<List<Service>> listServiceResponse = Objects.requireNonNull(APIRestConfig.getServicesService()
-                    .serviceGetAll().execute());
+                    .serviceGetAll(APIRestConfig.token).execute());
             if (listServiceResponse.body() != null) {
                 listService.addAll(listServiceResponse.body());
             }
@@ -116,7 +120,7 @@ public class ReportController implements BaseController, Initializable{
     private void loadAppointments() {
         try {
             Response<List<Appointment>> listAppointmentService = Objects.requireNonNull(APIRestConfig.getAppointmentsService()
-                    .appointmentsGetAll().execute());
+                    .appointmentsGetAll(APIRestConfig.token).execute());
             if (listAppointmentService.body() != null) {
                 listAppointments.addAll(listAppointmentService.body());
             }
@@ -128,7 +132,7 @@ public class ReportController implements BaseController, Initializable{
     private void loadUsers() {
         try {
             Response<List<User>> listUserResponse = Objects.requireNonNull(APIRestConfig.getUsersService()
-                    .usersGetAll().execute());
+                    .usersGetAll(APIRestConfig.token).execute());
             if (listUserResponse.body() != null) {
                 listUsers.addAll(listUserResponse.body());
             }
@@ -143,7 +147,7 @@ public class ReportController implements BaseController, Initializable{
         for (User user : listUsers) {
             if (user.getGender().toString().equals("Male")) {
                 maleCounter++;
-            }else if (user.getGender().toString().equals("Female")){
+            } else if (user.getGender().toString().equals("Female")) {
                 femaleCounter++;
             }
         }
@@ -162,7 +166,7 @@ public class ReportController implements BaseController, Initializable{
     public void configServiceChart() {
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
         Map<String, Integer> map = countAppointmentsService();
-        map.forEach((s, q) -> pieChartData.add(new PieChart.Data(s,q)));
+        map.forEach((s, q) -> pieChartData.add(new PieChart.Data(s, q)));
         genderChart.setData(pieChartData);
         genderChart.setClockwise(false);
         genderChart.setTitle(Util.getString("text.serviceDistribution"));
@@ -170,6 +174,7 @@ public class ReportController implements BaseController, Initializable{
 
     /**
      * Return a map | Key = Services | Value = Number of times it appears in services
+     *
      * @return Map of 'service name' as key (String) and 'number of times it appears in services' as value (Integer)
      */
     private Map<String, Integer> countAppointmentsService() {
@@ -177,7 +182,7 @@ public class ReportController implements BaseController, Initializable{
         List<String> servicesNames = new ArrayList<>();
         listAppointments.forEach(u -> servicesNames.add(u.getService().getName()));
 
-        for (Service service : listService){
+        for (Service service : listService) {
             int count = Collections.frequency(servicesNames, service.getName());
             map.put(service.getName(), count);
         }
@@ -186,6 +191,7 @@ public class ReportController implements BaseController, Initializable{
 
     /**
      * Return a map | Key = Day | Value = Amount of money
+     *
      * @return Map of 'days in actual month' as key (Integer) and 'number of amount of income money in that day' as value (Double)
      */
     private Map<Integer, Double> countIncomeAmountInMonth(int month) {
@@ -193,7 +199,7 @@ public class ReportController implements BaseController, Initializable{
         int actualYear = LocalDate.now().getYear();
 
         //Add day keys
-        for (int n = 1; n <= getMaxDayOfMonth(month,actualYear); n++){
+        for (int n = 1; n <= getMaxDayOfMonth(month, actualYear); n++) {
             map.put(n, 0.0);
         }
 
@@ -201,7 +207,7 @@ public class ReportController implements BaseController, Initializable{
         listAppointments.forEach(e -> {
             String[] appointmentDate = e.getDate().split("-");
             //Check actual year and month
-            if (Integer.parseInt(appointmentDate[0]) == actualYear && Integer.parseInt(appointmentDate[1]) == month){
+            if (Integer.parseInt(appointmentDate[0]) == actualYear && Integer.parseInt(appointmentDate[1]) == month) {
                 int dayKey = Integer.parseInt(appointmentDate[2]);
                 map.put(dayKey, map.get(dayKey) + e.getService().getPrice());
             }

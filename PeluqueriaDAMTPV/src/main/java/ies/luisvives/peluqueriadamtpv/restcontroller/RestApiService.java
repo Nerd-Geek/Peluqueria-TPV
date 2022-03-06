@@ -8,29 +8,28 @@ import java.util.List;
 
 public interface RestApiService {
 
-    @GET("services")
-    Call<List<Service>> serviceGetAll();
+    @GET(APIRestConfig.API_PATH + "/services/")
+    Call<List<Service>> serviceGetAll(@Header("Authorization") String token);
 
-    @GET("services")
-    Call<List<Service>> serviceGetAllWithService_name(@Query("searchQuery") String searchQuery);
+    @GET(APIRestConfig.API_PATH + "/services/")
+    Call<List<Service>> serviceGetAllWithService_name(@Header("Authorization") String token, @Query("searchQuery") String searchQuery);
 
-    @GET("services/{name}")
-    Call<Service> getByName();
+    @GET(APIRestConfig.API_PATH + "/services/{name}")
+    Call<Service> getByName(@Header("Authorization") String token);
 
-    @GET("services/{name}")
-    Call<Service> getByNameByOrderByPriceAsc();
+    @GET(APIRestConfig.API_PATH + "/services/{name}")
+    Call<Service> getByNameByOrderByPriceAsc(@Header("Authorization") String token);
 
-    @GET("services/{id}")
-    Call<Service> serviceGetById(@Path("id") String id);
+    @GET(APIRestConfig.API_PATH + "/services/{id}")
+    Call<Service> serviceGetById(@Header("Authorization") String token, @Path("id") String id);
 
-    @POST("services")
-    Call<Service> insertService(@Body Service service);
+    @POST(APIRestConfig.API_PATH + "/services/")
+    Call<Service> insertService(@Header("Authorization") String token, @Body Service service);
 
-    @PUT("services/{id}")
-    Call<Service> updateService();
+    @PUT(APIRestConfig.API_PATH + "/services/{id}")
+    Call<Service> updateService(@Header("Authorization") String token);
 
-    @DELETE("services/{id}")
-    Call<Service> deleteService(@Path("id") String id);
-
+    @DELETE(APIRestConfig.API_PATH + "/services/{id}")
+    Call<Service> deleteService(@Header("Authorization") String token, @Path("id") String id);
 
 }

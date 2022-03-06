@@ -2,40 +2,39 @@ package ies.luisvives.peluqueriadamtpv.restcontroller;
 
 
 import ies.luisvives.peluqueriadamtpv.model.Appointment;
-import ies.luisvives.peluqueriadamtpv.model.User;
 import retrofit2.Call;
 import retrofit2.http.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public interface RestAPIAppointments {
 
-    @GET("appointments/")
-    Call<List<Appointment>> appointmentsGetAll();
+    @GET(APIRestConfig.API_PATH + "/appointments/")
+    Call<List<Appointment>> appointmentsGetAll(@Header("Authorization") String token);
 
-    @GET("appointments/")
-    Call<Appointment> appointmentGetAllWithDate(@Query("date") LocalDate date);
+    @GET(APIRestConfig.API_PATH + "/appointments/")
+    Call<Appointment> appointmentGetAllWithDate(@Header("Authorization") String token, @Query("date") LocalDate date);
 
-    @GET("appointments/")
-    Call<List<Appointment>> appointmentGetAllWithUser_Username(@Query("searchQuery") String searchQuery);
+    @GET(APIRestConfig.API_PATH + "/appointments/")
+    Call<List<Appointment>> appointmentGetAllWithUser_Username(@Header("Authorization") String token, @Query("searchQuery") String searchQuery);
 
-    @GET("appointments/")
+    @GET(APIRestConfig.API_PATH + "/appointments/")
     Call<List<Appointment>> appointmentFindByDateAndUser_UsernameContainsIgnoreCaseAndService_Id(
+            @Header("Authorization") String token,
             @Query("searchQuery") String searchQuery
             , @Query("date") LocalDate date
             , @Query("service_id") String serviceId);
 
-    @GET("appointments/{id}")
-    Call<Appointment> appointmentGetById(@Path("id") String id);
+    @GET(APIRestConfig.API_PATH + "/appointments/{id}")
+    Call<Appointment> appointmentGetById(@Header("Authorization") String token, @Path("id") String id);
 
-    @POST("appointments/")
-    Call<Appointment> insertAppointments(@Body Appointment appointment);
+    @POST(APIRestConfig.API_PATH + "/appointments/")
+    Call<Appointment> insertAppointments(@Header("Authorization") String token, @Body Appointment appointment);
 
-    @PUT("appointments/{id}")
-    Call<Appointment> updateAppointments();
+    @PUT(APIRestConfig.API_PATH + "/appointments/{id}")
+    Call<Appointment> updateAppointments(@Header("Authorization") String token);
 
-    @DELETE("appointments/{id}")
-    Call<Appointment> deleteAppointmentById(@Path("id") String id);
+    @DELETE(APIRestConfig.API_PATH + "/appointments/{id}")
+    Call<Appointment> deleteAppointmentById(@Header("Authorization") String token, @Path("id") String id);
 }

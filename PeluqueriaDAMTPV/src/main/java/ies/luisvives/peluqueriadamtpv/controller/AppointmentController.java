@@ -67,7 +67,9 @@ public class AppointmentController implements BaseController{
     private void initServices() {
         Response<List<Service>> response = null;
         try {
-            response = APIRestConfig.getServicesService().serviceGetAll().execute();
+            response = APIRestConfig.getServicesService().serviceGetAll(APIRestConfig.token).execute();
+            System.out.println(APIRestConfig.token);
+            System.out.println(response);
             if (response.body() != null) {
                 services = FXCollections.observableArrayList(response.body());
             }
@@ -112,8 +114,8 @@ public class AppointmentController implements BaseController{
                 Appointment appointment = appointmentOpt.get();
                 appointment.setId(UUID.randomUUID().toString()); //TODO: why UUID set here? - vulnerability
                 if (confirmInsertDialog(appointment)){
-                    Appointment inserted = APIRestConfig.getAppointmentsService().insertAppointments(appointment).execute().body();
-                    if (inserted != null && APIRestConfig.getAppointmentsService().appointmentGetById(inserted.getId()) != null){
+                    Appointment inserted = APIRestConfig.getAppointmentsService().insertAppointments(APIRestConfig.token, appointment).execute().body();
+                    if (inserted != null && APIRestConfig.getAppointmentsService().appointmentGetById(APIRestConfig.token, inserted.getId()) != null){
                         showAlert(Alert.AlertType.INFORMATION, Util.getString("title.info"), Util.getString("text.appointmentCreated"));
                     }else{
                         showAlert(Alert.AlertType.ERROR, Util.getString("title.error"), Util.getString("error.appointmentNotCreated"));
@@ -220,7 +222,7 @@ public class AppointmentController implements BaseController{
         if (usernameField.getText().isEmpty()){
             errorMsg = Optional.of(Util.getString("error.userNotSet"));
         }else{
-            User user = APIRestConfig.getUsersService().findByUsername(usernameField.getText()).execute().body();
+            User user = APIRestConfig.getUsersService().findByUsername(APIRestConfig.token, usernameField.getText()).execute().body();
             if (user == null){
                 errorMsg = Optional.of(Util.getString("error.userNotFound") + "\n" + getUserSuggestionsMsg());
             }else{
@@ -242,7 +244,7 @@ public class AppointmentController implements BaseController{
         int limit = 10;
         StringBuilder usersSuggestionMsg = new StringBuilder();
         List<User> usersSuggestions = APIRestConfig.getUsersService()
-                .userGetAllWithUser_name(usernameField.getText()).execute().body();
+                .userGetAllWithUser_name(APIRestConfig.token, usernameField.getText()).execute().body();
         if (usersSuggestions != null && !usersSuggestions.isEmpty()){
             usersSuggestionMsg.append("\n").append(Util.getString("text.userSuggestions")).append("\n");
 

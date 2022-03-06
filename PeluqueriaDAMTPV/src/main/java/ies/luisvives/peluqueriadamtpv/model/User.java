@@ -15,6 +15,7 @@ public class User implements TableEntity{
     private String surname;
     private String phoneNumber;
     private String email;
+    private String token;
     private UserGender gender;
     private Set<UserRoles> userRoles;
 }
