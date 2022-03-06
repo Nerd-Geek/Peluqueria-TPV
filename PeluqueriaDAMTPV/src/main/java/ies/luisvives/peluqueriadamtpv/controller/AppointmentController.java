@@ -68,8 +68,6 @@ public class AppointmentController implements BaseController{
         Response<List<Service>> response = null;
         try {
             response = APIRestConfig.getServicesService().serviceGetAll(APIRestConfig.token).execute();
-            System.out.println(APIRestConfig.token);
-            System.out.println(response);
             if (response.body() != null) {
                 services = FXCollections.observableArrayList(response.body());
             }

@@ -123,15 +123,15 @@ public class TableViewController implements BaseController, Initializable, Callb
                 }
             }
         } else {
-            notSelectedItemAlert();
+            popUpAlert(Util.getString("title.info"), Util.getString("title.noTableItemSelected"));
         }
     }
 
-    private void notSelectedItemAlert() {
+    private void popUpAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(Util.getString("title.info"));
+        alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(Util.getString("title.noTableItemSelected"));
+        alert.setContentText(content);
 
         alert.showAndWait();
     }
@@ -167,15 +167,39 @@ public class TableViewController implements BaseController, Initializable, Callb
                 switch (this.type) {
                     case APPOINTMENT:
                         Appointment appointment = APIRestConfig.getAppointmentsService().appointmentGetById(APIRestConfig.token, elementId).execute().body();
-                        opt = Util.fxmlLoaderSetController("appointment_item_view", new AppointmentItemController(appointment));
+                        popUpAlert(Util.getString("title.appointment"),
+                                "• " + Util.getString("text.service") + ": " + appointment.getService().getName() + "\n" +
+                                "• " + Util.getString("text.username") + ": " + appointment.getUser().getUsername() + "\n" +
+                                        "• " + Util.getString("text.date") + ": " + appointment.getDate() + "\n" +
+                                        "• " + Util.getString("text.hour") + ": " + appointment.getTime() + "\n"
+                        );
                         break;
                     case USER:
                         User user = APIRestConfig.getUsersService().usersGetById(APIRestConfig.token, elementId).execute().body();
-                        opt = Util.fxmlLoaderSetController("user_item_view", new UserItemController(user)); //TODO: Same as other - why NullPointerException?
+
+                        String gender = Util.getString("text.male");
+                        System.out.println(user);
+
+                        if (user.getGender().toString().equals("Female")) {
+                            gender = Util.getString("text.female");
+                        }
+                        popUpAlert(Util.getString("title.user"),
+                        "• " + Util.getString("text.username") + ": " + user.getUsername() + "\n" +
+                                "• " + Util.getString("text.name") + ": " + user.getName() + "\n" +
+                                "• " + Util.getString("text.surname") + ": " + user.getSurname() + "\n" +
+                                "• " + Util.getString("text.email") + ": " + user.getEmail() + "\n" +
+                                "• " + Util.getString("text.telephone") + ": " + user.getPhoneNumber() + "\n" +
+                                "• " + Util.getString("text.gender") + ": " + gender + "\n"
+                        );
                         break;
                     case SERVICE:
                         Service service = APIRestConfig.getServicesService().serviceGetById(APIRestConfig.token, elementId).execute().body();
-                        opt = Util.fxmlLoaderSetController("service_item_view", new ServiceItemController(service));
+                        popUpAlert(Util.getString("text.service"),
+                                "• " + Util.getString("text.service") + ": " + service.getName() + "\n" +
+                                        "• " + Util.getString("text.description") + ": " + service.getDescription() + "\n" +
+                                        "• " + Util.getString("text.price") + ": " + service.getPrice() + "\n" +
+                                        "• " + Util.getString("text.stock") + ": " + service.getStock() + "\n"
+                        );
                         break;
                 }
 
@@ -192,7 +216,7 @@ public class TableViewController implements BaseController, Initializable, Callb
                 e.printStackTrace();
             }
         } else {
-            notSelectedItemAlert();
+            popUpAlert(Util.getString("title.info"), Util.getString("title.noTableItemSelected"));
         }
     }
 

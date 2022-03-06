@@ -179,7 +179,7 @@ public class CalendarViewController implements BaseController{
         int lastDayIndex = 6;
 
         int day = 1;
-        System.out.println(lastPosition[0] + " " + lastPosition[1]);
+        //System.out.println(lastPosition[0] + " " + lastPosition[1]);
         for (int i = 0; i < lastPosition[1]; i++) {
             if (i != 0) firstDayIndex = 0;
             if (i == lastPosition[1] - 1) {
