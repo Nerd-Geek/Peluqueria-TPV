@@ -8,6 +8,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -17,7 +18,7 @@ import java.util.Objects;
 public class MainController implements BaseController {
     private TranslateTransition toggleTranlate;
     @FXML
-    private SplitPane mainPane;
+    private BorderPane mainPane;
     @FXML
     private StackPane includedViewAppointments, includedViewUsers, includedViewServices, includedViewReports, includedViewSettings;
     @FXML
