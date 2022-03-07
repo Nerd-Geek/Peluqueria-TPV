@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import retrofit2.Response;
 
 import javax.security.auth.callback.Callback;
@@ -48,13 +49,6 @@ public class TableViewController implements BaseController, Initializable, Callb
     private final TableColumn<TableEntity, ?> column6;
     private final TableColumn<TableEntity, ?> column7;
 
-    @FXML
-    private Button details_button;
-    @FXML
-    private Button view_all;
-    @FXML
-    private Button delete_button;
-
     private String searchQuery;
 
     private String serviceId;
@@ -87,7 +81,7 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //empty
+        table.setPlaceholder(new Label(Util.getString("text.noItems")));
     }
 
     @FXML
@@ -129,6 +123,8 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     private void popUpAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        Util.getStageWithIcon(stage);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
@@ -138,6 +134,8 @@ public class TableViewController implements BaseController, Initializable, Callb
 
     private boolean confirmDeleteDialog() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        Util.getStageWithIcon(stage);
         alert.setTitle(Util.getString("text.remove"));
         alert.setContentText(Util.getString("text.removeQuestion"));
         alert.showAndWait();
@@ -270,8 +268,9 @@ public class TableViewController implements BaseController, Initializable, Callb
         try {
             Response<List<Appointment>> response = APIRestConfig
                     .getAppointmentsService()
-                    .appointmentFindByDateAndUser_UsernameContainsIgnoreCaseAndService_Id(APIRestConfig.token, searchQuery, date, serviceId)
-                    .execute(); //TODO: add the time query?
+                    .appointmentFindByDateAndUser_UsernameContainsIgnoreCaseAndService_Id(APIRestConfig.token,
+                            searchQuery, date, serviceId)
+                    .execute();
             if (response.body() != null) {
                 AppointmentListMapper mapper = new AppointmentListMapper();
                 ObservableList<TableEntity> appointments =

@@ -5,6 +5,7 @@ import ies.luisvives.peluqueriadamtpv.model.Service;
 import ies.luisvives.peluqueriadamtpv.model.User;
 import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
 import ies.luisvives.peluqueriadamtpv.utils.Util;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -41,10 +42,12 @@ public class ReportController implements BaseController, Initializable {
     }
 
     private void initCharts() {
-        configGenderChart();
-        configServiceChart();
-        configIncomeAmountChart();
-        configNumberAppointmentsChart();
+        new Thread(() -> Platform.runLater(() -> {
+            configGenderChart();
+            configServiceChart();
+            configIncomeAmountChart();
+            configNumberAppointmentsChart();
+        })).start();
     }
 
     private void configNumberAppointmentsChart() {
@@ -214,6 +217,4 @@ public class ReportController implements BaseController, Initializable {
         });
         return map;
     }
-
-    //TODO: DO HACER LOS REPORTS QUE QUEDAN
 }

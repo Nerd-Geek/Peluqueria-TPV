@@ -16,6 +16,14 @@ public class Service implements TableEntity{
     @JsonIgnore
     private List<Appointment> appointments;
 
+    public Service(String image, String name, String description, Double price, Integer stock){
+        this.image = image;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+    }
+
     @Override
     public String toString() {
         return

@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import retrofit2.Response;
 
 import java.io.IOException;
@@ -124,6 +125,8 @@ public class AppointmentController implements BaseController{
 
     private void showAlert(Alert.AlertType alertType, String title, String infoMsg) {
         Alert alert = new Alert(alertType);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        Util.getStageWithIcon(stage);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(infoMsg);
@@ -133,6 +136,8 @@ public class AppointmentController implements BaseController{
     private boolean confirmInsertDialog(Appointment appointment) {
         User user = appointment.getUser();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        Util.getStageWithIcon(stage);
         String content = Util.getString("text.makeAppointmentQuestion") + "\n\n" +
                 "• " + Util.getString("text.date") + ": " + appointment.getDate() + "\n" +
                 "• " + Util.getString("text.hour") + ": " + appointment.getTime() + "\n" +

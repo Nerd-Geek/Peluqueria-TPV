@@ -29,7 +29,7 @@ public interface RestAPIAppointments {
     @GET(APIRestConfig.API_PATH + "/appointments/{id}")
     Call<Appointment> appointmentGetById(@Header("Authorization") String token, @Path("id") String id);
 
-    @POST(APIRestConfig.API_PATH + "/appointments/")
+    @POST(APIRestConfig.API_PATH + "/appointments/create")
     Call<Appointment> insertAppointments(@Header("Authorization") String token, @Body Appointment appointment);
 
     @PUT(APIRestConfig.API_PATH + "/appointments/{id}")

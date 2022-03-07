@@ -78,25 +78,7 @@ public class UsersController implements BaseController, Initializable, Callback 
     @FXML
     private void insertUser() throws IOException {
 
-        ObservableList<User> users =
-                FXCollections.observableArrayList();
-        User user = new User();
-        user.setId(UUID.randomUUID().toString()); //TODO: why UUID set here? - vulnerability
-        user.setUsername(usernameTextField.getText());
-        user.setName(nameTextField.getText());
-        user.setSurname(surnameTextField.getText());
-        user.setPassword(passwordTextField.getText());
-        user.setPhoneNumber(telephoneTextField.getText());
-        user.setEmail(emailTextField.getText());
-        user.setGender(UserGender.valueOf(genderChoiceBox.getValue()));
-        user.setImage(imageTextField.getText());
-
-        APIRestConfig.getUsersService().insertUsers(APIRestConfig.token, user).execute();
-        Response<List<User>> usersList = Objects.requireNonNull(APIRestConfig.getUsersService().usersGetAll(APIRestConfig.token).execute());
-        if (usersList.body() != null) {
-            users.addAll(usersList.body());
-//            listUsers.setItems(users);
-        }
+       //TODO: DEL
     }
 
     public void setSearchQuery(String searchQuery) {

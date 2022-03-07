@@ -82,10 +82,8 @@ public class HourViewController {
         //TODO: TEST
         if (!Objects.equals(actualDate.get(), "")){
             actualTimeString = b.getText();
-            System.out.println("Button pressed"); //TODO: DEL?
             LocalTime time = stringToTime(actualTimeString);
-
-            System.out.println("REST petition with time " + time); //TODO: DEL?
+            System.out.println("REST petition with time " + time);
             tableViewController.setTime(time); //TODO: DO
         }
     }

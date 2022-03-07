@@ -5,6 +5,7 @@ import lombok.*;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 public class User implements TableEntity{
     private String id;
     private String image;
@@ -18,4 +19,16 @@ public class User implements TableEntity{
     private String token;
     private UserGender gender;
     private Set<UserRoles> userRoles;
+
+    public User(String image, String username, String name, String surname, String password, String phoneNumber,
+                String email, UserGender gender){
+        this.image = image;
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.gender = gender;
+    }
 }

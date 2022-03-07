@@ -14,7 +14,7 @@ public interface RestApiUsers {
     @GET(APIRestConfig.API_PATH + "/users/")
     Call<List<User>> userGetAllWithUser_name(@Header("Authorization") String token, @Query("searchQuery") String searchQuery);
 
-    @GET(APIRestConfig.API_PATH + "/users/{username}")
+    @GET(APIRestConfig.API_PATH + "/users/name/{username}")
     Call<User> findByUsername(@Header("Authorization") String token, @Path("username") String username);
 
     @GET(APIRestConfig.API_PATH + "/users/{id}")
