@@ -1,18 +1,22 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
 import ies.luisvives.peluqueriadamtpv.model.Appointment;
-import ies.luisvives.peluqueriadamtpv.model.createDTOs.CreateAppointmentDTO;
 import ies.luisvives.peluqueriadamtpv.model.Service;
 import ies.luisvives.peluqueriadamtpv.model.User;
+import ies.luisvives.peluqueriadamtpv.model.createDTOs.CreateAppointmentDTO;
 import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
 import ies.luisvives.peluqueriadamtpv.utils.Util;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import retrofit2.Response;
 
 import java.io.IOException;
@@ -22,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class AppointmentController implements BaseController{
+public class AppointmentController implements BaseController {
     @FXML
     private Button prevServiceButton;
     @FXML
@@ -45,6 +49,9 @@ public class AppointmentController implements BaseController{
     @FXML
     private Label labelService;
 
+    @FXML
+    private Label labelServiceStock;
+
     private ObservableList<Service> services;
 
     private int actualServiceSelected = 0;
@@ -53,7 +60,7 @@ public class AppointmentController implements BaseController{
     }
 
     @FXML
-    protected void initialize() {
+    protected void initialize() throws IOException {
         tableViewController.setSearchQuery("");
         tableViewController.setEntityForTable(TableViewController.APPOINTMENT);
         calendarViewController.setTableViewController(tableViewController);
@@ -68,7 +75,15 @@ public class AppointmentController implements BaseController{
         });
     }
 
-    private void initServices() {
+    private void refreshAll() {
+        try {
+            updateService();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initServices() throws IOException {
         Response<List<Service>> response = null;
         try {
             response = APIRestConfig.getServicesService().serviceGetAll(APIRestConfig.token).execute();
@@ -86,116 +101,139 @@ public class AppointmentController implements BaseController{
      * Update the service data
      * (This method establishes first service by default if exists)
      */
-    private void updateService() {
-        if (!services.isEmpty()){
-            labelService.setText(String.valueOf(services.get(actualServiceSelected).getName()));
-        }else{
+    private void updateService() throws IOException {
+        if (!services.isEmpty()) {
+            Service service = services.get(actualServiceSelected);
+            labelService.setText(String.valueOf(service.getName()));
+
+            Optional<Appointment> apOpt = appointmentCreate(false, false);
+            if (apOpt.isPresent()) {
+                labelServiceStock.setText("x" + Util.getLeftStock(apOpt.get()));
+            } else {
+                labelServiceStock.setText("?");
+            }
+        } else {
             labelService.setText(Util.getString("text.noServices"));
+            labelServiceStock.setText("");
         }
     }
 
     @FXML
-    protected void prevServiceAction(){
-        if (!services.isEmpty() && actualServiceSelected > 0){
-            actualServiceSelected -=1;
+    protected void prevServiceAction() throws IOException {
+        if (!services.isEmpty() && actualServiceSelected > 0) {
+            actualServiceSelected -= 1;
         }
         updateService();
     }
+
     @FXML
-    protected void nextServiceAction(){
-        if (!services.isEmpty() && actualServiceSelected < services.size() - 1){
-            actualServiceSelected +=1;
+    protected void nextServiceAction() throws IOException {
+        if (!services.isEmpty() && actualServiceSelected < services.size() - 1) {
+            actualServiceSelected += 1;
         }
         updateService();
     }
 
     @FXML
     public void createAppointment() throws IOException {
-            Optional<Appointment> appointmentOpt = appointmentCreate();
-            if (appointmentOpt.isPresent()){
-                Appointment appointment = appointmentOpt.get();
-                CreateAppointmentDTO createAppointment = new CreateAppointmentDTO();
-                createAppointment.setDate(appointment.getDate());
-                createAppointment.setTime(appointment.getTime());
-                createAppointment.setServiceId(appointment.getService().getId());
-                createAppointment.setUserId(appointment.getUser().getId());
+        Optional<Appointment> appointmentOpt = appointmentCreate(true, true);
+        if (appointmentOpt.isPresent()) {
+            Appointment appointment = appointmentOpt.get();
+            CreateAppointmentDTO createAppointment = new CreateAppointmentDTO();
+            createAppointment.setDate(appointment.getDate());
+            createAppointment.setTime(appointment.getTime());
+            createAppointment.setServiceId(appointment.getService().getId());
+            createAppointment.setUserId(appointment.getUser().getId());
 
-                //Confirm
-                User user = appointment.getUser();
-                String content = Util.getString("text.makeAppointmentQuestion") + "\n\n" +
-                        "• " + Util.getString("text.date") + ": " + appointment.getDate() + "\n" +
-                        "• " + Util.getString("text.hour") + ": " + appointment.getTime() + "\n" +
-                        "• " + Util.getString("text.service") + ": " + appointment.getService().getName() + "\n" +
-                        "• " + Util.getString("text.username") + ": " + user.getUsername()+" ("+user.getName()+" "+user.getSurname() + ")\n\n";
+            //Confirm
+            User user = appointment.getUser();
+            String content = Util.getString("text.makeAppointmentQuestion") + "\n\n" +
+                    "• " + Util.getString("text.date") + ": " + appointment.getDate() + "\n" +
+                    "• " + Util.getString("text.hour") + ": " + appointment.getTime() + "\n" +
+                    "• " + Util.getString("text.service") + ": " + appointment.getService().getName() + "\n" +
+                    "• " + Util.getString("text.username") + ": " + user.getUsername() + " (" + user.getName() + " " + user.getSurname() + ")\n\n";
 
-                if (Util.confirmDeleteAlert(Util.getString("text.create"), content)){
-                    Appointment inserted = APIRestConfig.getAppointmentsService().insertAppointments(APIRestConfig.token, createAppointment).execute().body();
-                    if (inserted != null && APIRestConfig.getAppointmentsService().appointmentGetById(APIRestConfig.token, inserted.getId()) != null){
-                        Util.popUpAlert(Util.getString("title.info"), Util.getString("text.appointmentCreated"),Alert.AlertType.INFORMATION);
-                    }else{
-                        String moreInfo = getErrorAppointment(appointment);
-                        Util.popUpAlert(Util.getString("title.error"), Util.getString("error.appointmentNotCreated") + "\n" + moreInfo, Alert.AlertType.ERROR);
-                    }
+            if (Util.confirmDeleteAlert(Util.getString("text.create"), content)) {
+                Appointment inserted = APIRestConfig.getAppointmentsService().insertAppointments(APIRestConfig.token, createAppointment).execute().body();
+                if (inserted != null && APIRestConfig.getAppointmentsService().appointmentGetById(APIRestConfig.token, inserted.getId()) != null) {
+                    Util.popUpAlert(Util.getString("title.info"), Util.getString("text.appointmentCreated"), Alert.AlertType.INFORMATION);
+                } else {
+                    String moreInfo = getErrorAppointment(appointment);
+                    Util.popUpAlert(Util.getString("title.error"), Util.getString("error.appointmentNotCreated") + "\n" + moreInfo, Alert.AlertType.ERROR);
                 }
             }
+        }
     }
 
-    private String getErrorAppointment(Appointment appointment) {
+    private String getErrorAppointment(Appointment appointment) throws IOException {
         LocalDate localDate = LocalDate.parse(appointment.getDate());
-        String[] time = appointment.getTime().split(":");
-        LocalTime dateTime = LocalTime.of(Integer.parseInt(time[0]),Integer.parseInt(time[1]));
-        if (localDate.isAfter(LocalDate.now()) || (dateTime.isAfter(LocalTime.now()) && localDate.isEqual(LocalDate.now()))){
+        //TODO: DEL ? ---String[] time = appointment.getTime().split(":");
+        LocalTime dateTime = hourViewController.getActualTime();
+        Util.getLeftStock(appointment);
+        if (localDate.isBefore(LocalDate.now()) || (dateTime.isBefore(LocalTime.now()) && localDate.isEqual(LocalDate.now()))) {
             return Util.getString("error.oldDateTime");
-        }else if (appointment.getService().getStock() <= 0){
-            return Util.getString("error.noStockService");
-        }else{
-            //TODO: else que comprueba: if (appointment.getUser().getAppointments().stream().anyMatch(a -> a.getDate().equals(appointment.getDate()) && a.getTime().equals(appointment.getTime()))) {
-            return "";
+        } else {
+            if (Util.getLeftStock(appointment) <= 0) {
+                return Util.getString("error.noStockService");
+            } else {
+                //TODO: else que comprueba: if (appointment.getUser().getAppointments().stream().anyMatch(a -> a.getDate().equals(appointment.getDate()) && a.getTime().equals(appointment.getTime()))) {
+                return "";
+            }
         }
     }
 
     /**
      * Return an appointment if can be created
      * pop up an alert if appointment can't be created
+     *
      * @return Optional Appointment present if can be created
      */
-    private Optional<Appointment> appointmentCreate() throws IOException {
+    private Optional<Appointment> appointmentCreate(boolean alert, boolean userDepends) throws IOException {
         Optional<Appointment> appointment = Optional.empty();
-        Optional<String> date = getDate();
+        Optional<String> date = getDate(alert);
         Optional<String> time = Optional.empty();
         Optional<User> user = Optional.empty();
-        Optional<Service> service = getService();
-        if (date.isPresent()){
-            time = getTime();
-            if (time.isPresent()){
-                user = getUser();
+        Optional<Service> service = getService(alert);
+        if (date.isPresent()) {
+            time = getTime(alert);
+            if (time.isPresent()) {
+                user = getUser(alert);
             }
         }
-        if (date.isPresent() && time.isPresent() && user.isPresent() && service.isPresent()){
+
+        //User condition set
+        boolean userCondition = user.isPresent();
+        if (!userDepends) {
+            userCondition = true;
+        }
+
+        //Set values
+        if (date.isPresent() && time.isPresent() && userCondition && service.isPresent()) {
             Appointment ap = new Appointment();
             ap.setId(UUID.randomUUID().toString()); //TODO: why UUID set here? - vulnerability
             ap.setDate(date.get());
             ap.setTime(time.get());
-            ap.setUser(user.get());
             ap.setService(service.get());
+            user.ifPresent(ap::setUser);
             appointment = Optional.of(ap);
         }
-
         return appointment;
     }
 
-    private Optional<String> getTime() {
+    private Optional<String> getTime(boolean alert) {
         Optional<String> str = hourViewController.getActualTimeString();
-        if (str.isEmpty()){
-            Util.popUpAlert(Util.getString("title.info"), Util.getString("error.noTimeSet"),Alert.AlertType.INFORMATION);
+    if (alert && str.isEmpty()) {
+            Util.popUpAlert(Util.getString("title.info"), Util.getString("error.noTimeSet"), Alert.AlertType.INFORMATION);
         }
         return str;
     }
 
-    private Optional<String> getDate() {
+    private Optional<String> getDate(boolean alert) {
         Optional<String> str = calendarViewController.getActualDateString();
-        if (str.isEmpty()){
-            Util.popUpAlert(Util.getString("title.info"), Util.getString("error.noDateSet"), Alert.AlertType.INFORMATION);
+        if (str.isEmpty()) {
+            if (alert) {
+                Util.popUpAlert(Util.getString("title.info"), Util.getString("error.noDateSet"), Alert.AlertType.INFORMATION);
+            }
         }
         return str;
     }
@@ -203,13 +241,17 @@ public class AppointmentController implements BaseController{
     /**
      * Return a Service if set and exist
      * Pop up an alert if it doesn't exist
+     *
+     * @param alert Alert Enabled
      * @return Optional Present if service exists
      */
-    private Optional<Service> getService() {
+    private Optional<Service> getService(boolean alert) {
         Optional<Service> service = Optional.empty();
-        if (services.isEmpty()){
-            Util.popUpAlert(Util.getString("title.info"), Util.getString("text.noServices"), Alert.AlertType.INFORMATION);
-        }else{
+        if (services.isEmpty()) {
+            if (alert) {
+                Util.popUpAlert(Util.getString("title.info"), Util.getString("text.noServices"), Alert.AlertType.INFORMATION);
+            }
+        } else {
             service = Optional.of(services.get(actualServiceSelected));
         }
         return service;
@@ -218,30 +260,37 @@ public class AppointmentController implements BaseController{
     /**
      * Return a User if set and exist
      * Pop up an alert if it doesn't exist
+     *
+     * @param alert Alert Enabled
      * @return Optional Present if user exists
      */
-    private Optional<User> getUser() throws IOException {
+    private Optional<User> getUser(boolean alert) throws IOException {
         Optional<User> userOpt = Optional.empty();
         Optional<String> errorMsg = Optional.empty();
 
-        if (usernameField.getText().isEmpty()){
+        if (usernameField.getText().isEmpty()) {
             errorMsg = Optional.of(Util.getString("error.userNotSet"));
-        }else{
+        } else {
             User user = APIRestConfig.getUsersService().findByUsername(APIRestConfig.token, usernameField.getText()).execute().body();
-            if (user == null){
+            if (user == null) {
                 errorMsg = Optional.of(Util.getString("error.userNotFound") + "\n" + getUserSuggestionsMsg());
-            }else{
+            } else {
                 userOpt = Optional.of(user);
             }
         }
 
         //Show alert if error msg and return result
-        errorMsg.ifPresent(e -> Util.popUpAlert(Util.getString("title.info"), e, Alert.AlertType.INFORMATION));
+        errorMsg.ifPresent(e -> {
+            if (alert) {
+                Util.popUpAlert(Util.getString("title.info"), e, Alert.AlertType.INFORMATION);
+            }
+        });
         return userOpt;
     }
 
     /**
      * Return user suggestions (empty String if any suggestion)
+     *
      * @return User suggestions
      * @throws IOException Input/Output exception
      */
@@ -250,11 +299,11 @@ public class AppointmentController implements BaseController{
         StringBuilder usersSuggestionMsg = new StringBuilder();
         List<User> usersSuggestions = APIRestConfig.getUsersService()
                 .userGetAllWithUser_name(APIRestConfig.token, usernameField.getText()).execute().body();
-        if (usersSuggestions != null && !usersSuggestions.isEmpty()){
+        if (usersSuggestions != null && !usersSuggestions.isEmpty()) {
             usersSuggestionMsg.append("\n").append(Util.getString("text.userSuggestions")).append("\n");
 
             int size = usersSuggestions.size();
-            if (size > limit){
+            if (size > limit) {
                 size = limit;
             }
 
@@ -269,6 +318,7 @@ public class AppointmentController implements BaseController{
 
     /**
      * Set te search query
+     *
      * @param searchQuery search query
      */
     public void setSearchQuery(String searchQuery) {

@@ -44,6 +44,11 @@
                                        <padding>
                                           <Insets top="20.0" />
                                        </padding></Label>
+                                    <Label fx:id="labelServiceStock" alignment="TOP_CENTER" layoutX="10.0" layoutY="130.0" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0">
+                                       <padding>
+                                          <Insets top="20.0" />
+                                       </padding>
+                                    </Label>
                                  </children>
                               </VBox>
                               <Button fx:id="next_service_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#nextServiceAction" prefWidth="30.0" text="-&gt;" HBox.hgrow="ALWAYS">

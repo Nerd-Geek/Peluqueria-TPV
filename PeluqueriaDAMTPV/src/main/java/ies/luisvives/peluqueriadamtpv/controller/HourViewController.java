@@ -1,5 +1,6 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,6 +55,7 @@ public class HourViewController {
 
     private TableViewController tableViewController;
     private StringProperty actualDate;
+    private LocalTime localTime;
 
 
     @FXML
@@ -79,13 +81,23 @@ public class HourViewController {
     protected void onButtonHourPressed(ActionEvent event) {
         Button b = (Button) event.getSource();
 
-        //TODO: TEST
         if (!Objects.equals(actualDate.get(), "")){
             actualTimeString = b.getText();
-            LocalTime time = stringToTime(actualTimeString);
-            System.out.println("REST petition with time " + time);
-            tableViewController.setTime(time); //TODO: DO
+            localTime = stringToTime(actualTimeString);
+            setActualTimeStringFormat();
+            System.out.println("REST petition with time " + localTime);
+            System.out.println(actualTimeString);
+            tableViewController.setTime(localTime); //TODO: DO
         }
+    }
+
+    private void setActualTimeStringFormat() {
+        String[] time = actualTimeString.split(":");
+        String hour = time[0];
+        if (hour.length() <= 1){
+            hour = "0" + hour;
+        }
+        actualTimeString = hour + ":" + time[1];
     }
 
     private LocalTime stringToTime(String str) {
@@ -93,10 +105,6 @@ public class HourViewController {
         int selectedHour = Integer.parseInt(separated[0]);
         int selectedMinute = Integer.parseInt(separated[1]);
         return LocalTime.of(selectedHour, selectedMinute);
-    }
-
-    private int getMinuteFromButton(String str) { //TODO: DEL?
-        return Integer.parseInt(str.split(":")[1]);
     }
 
     public void setExternalData(TableViewController tableViewController, StringProperty actualDate) {
@@ -194,5 +202,9 @@ public class HourViewController {
             actualPage +=1;
         }
         refeshTableContent();
+    }
+
+    public LocalTime getActualTime() {
+        return this.localTime;
     }
 }

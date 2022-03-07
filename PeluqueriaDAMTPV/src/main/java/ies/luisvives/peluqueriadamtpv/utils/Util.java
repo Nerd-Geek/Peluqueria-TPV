@@ -1,8 +1,9 @@
 package ies.luisvives.peluqueriadamtpv.utils;
 
-import ies.luisvives.peluqueriadamtpv.App;
 import ies.luisvives.peluqueriadamtpv.controller.BaseController;
+import ies.luisvives.peluqueriadamtpv.model.Appointment;
 import ies.luisvives.peluqueriadamtpv.model.UserConfiguration;
+import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -12,10 +13,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Util {
     private static ResourceBundle resourceBundle;
@@ -30,7 +30,7 @@ public class Util {
         resourceBundle = ResourceBundle.getBundle(PACKAGE_DIR + "i18n/strings", locale);
     }
 
-    public static Stage getStageWithIcon(Stage stage){
+    public static Stage getStageWithIcon(Stage stage) {
         stage.getIcons().add(new Image(Objects.requireNonNull(
                 Util.class.getResourceAsStream(Util.PACKAGE_DIR + "images/logo.png"))));
         return stage;
@@ -78,5 +78,27 @@ public class Util {
 
     public static boolean confirmDeleteAlert(String title, String content) {
         return popUpAlert(title, content, Alert.AlertType.CONFIRMATION).getResult().getButtonData().isDefaultButton();
+    }
+
+    public static Integer getLeftStock(Appointment appointment) throws IOException {
+        LocalDate localDate = LocalDate.parse(appointment.getDate());
+        int leftStock = appointment.getService().getStock();
+
+        List<Appointment> response = APIRestConfig.getAppointmentsService()
+                .appointmentFindByDateAndUser_UsernameContainsIgnoreCaseAndService_Id(APIRestConfig.token, ""
+                        , localDate, appointment.getService().getId()).execute().body();
+        AtomicInteger count = new AtomicInteger();
+        assert response != null;
+        response.forEach(e -> {
+            if (e.getTime().equalsIgnoreCase(appointment.getTime())) {
+                System.out.println("1eyahhsd9");
+                count.addAndGet(1);
+            }
+        });
+        leftStock -= count.get();
+        if (leftStock < 0) {
+            leftStock = 0;
+        }
+        return leftStock;
     }
 }
