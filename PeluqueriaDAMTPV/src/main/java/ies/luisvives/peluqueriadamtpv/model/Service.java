@@ -2,10 +2,12 @@ package ies.luisvives.peluqueriadamtpv.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class Service implements TableEntity{
     private String id;
     private String image;
@@ -15,14 +17,6 @@ public class Service implements TableEntity{
     private Integer stock;
     @JsonIgnore
     private List<Appointment> appointments;
-
-    public Service(String image, String name, String description, Double price, Integer stock){
-        this.image = image;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.stock = stock;
-    }
 
     @Override
     public String toString() {

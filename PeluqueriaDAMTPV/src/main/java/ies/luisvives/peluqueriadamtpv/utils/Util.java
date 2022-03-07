@@ -6,6 +6,7 @@ import ies.luisvives.peluqueriadamtpv.model.UserConfiguration;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -61,5 +62,21 @@ public class Util {
             setResourceBundleLanguage();
         }
         return resourceBundle.getString(str);
+    }
+
+    public static Alert popUpAlert(String title, String content, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        Util.getStageWithIcon(stage);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+
+        alert.showAndWait();
+        return alert;
+    }
+
+    public static boolean confirmDeleteAlert(String title, String content) {
+        return popUpAlert(title, content, Alert.AlertType.CONFIRMATION).getResult().getButtonData().isDefaultButton();
     }
 }

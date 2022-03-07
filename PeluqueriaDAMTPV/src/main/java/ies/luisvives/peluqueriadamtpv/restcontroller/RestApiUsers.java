@@ -1,6 +1,7 @@
 package ies.luisvives.peluqueriadamtpv.restcontroller;
 
 import ies.luisvives.peluqueriadamtpv.model.User;
+import ies.luisvives.peluqueriadamtpv.model.createDTOs.CreateUser;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -21,7 +22,7 @@ public interface RestApiUsers {
     Call<User> usersGetById(@Header("Authorization") String token, @Path("id") String id);
 
     @POST(APIRestConfig.API_PATH + "/users/")
-    Call<User> insertUsers(@Header("Authorization") String token, @Body User user);
+    Call<User> insertUsers(@Header("Authorization") String token, @Body CreateUser user);
 
     @PUT(APIRestConfig.API_PATH + "/users/{id}")
     Call<User> updateUsers(@Header("Authorization") String token);

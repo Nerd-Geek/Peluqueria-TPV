@@ -19,4 +19,6 @@ module ies.luisvives.peluqueriadamtpv {
     exports ies.luisvives.peluqueriadamtpv.controller;
     exports ies.luisvives.peluqueriadamtpv.model;
     exports ies.luisvives.peluqueriadamtpv.restcontroller;
+    exports ies.luisvives.peluqueriadamtpv.model.createDTOs;
+    opens ies.luisvives.peluqueriadamtpv.model.createDTOs to com.fasterxml.jackson.databind, javafx.controls, javafx.fxml;
 }

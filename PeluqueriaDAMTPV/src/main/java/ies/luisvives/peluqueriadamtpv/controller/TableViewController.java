@@ -15,7 +15,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 import retrofit2.Response;
 
 import javax.security.auth.callback.Callback;
@@ -96,7 +95,7 @@ public class TableViewController implements BaseController, Initializable, Callb
     @FXML
     public void delete(ActionEvent e) {
         if (table.getSelectionModel().getSelectedCells().size() == 1) {
-            if (confirmDeleteDialog()) {
+            if (Util.confirmDeleteAlert(Util.getString("text.remove"), Util.getString("text.removeQuestion"))) {
                 String elementId = table.getItems().get(table.getSelectionModel().getFocusedIndex()).getId();
                 try {
                     switch (type) {
@@ -117,32 +116,8 @@ public class TableViewController implements BaseController, Initializable, Callb
                 }
             }
         } else {
-            popUpAlert(Util.getString("title.info"), Util.getString("title.noTableItemSelected"));
+            Util.popUpAlert(Util.getString("title.info"), Util.getString("title.noTableItemSelected"),Alert.AlertType.INFORMATION);
         }
-    }
-
-    private void popUpAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        Util.getStageWithIcon(stage);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-
-        alert.showAndWait();
-    }
-
-    private boolean confirmDeleteDialog() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        Util.getStageWithIcon(stage);
-        alert.setTitle(Util.getString("text.remove"));
-        alert.setContentText(Util.getString("text.removeQuestion"));
-        alert.showAndWait();
-        if (alert.getResult().getButtonData().isDefaultButton())
-            return true;
-        else
-            return false;
     }
 
     private void deleteDoneDialog() {
@@ -165,12 +140,12 @@ public class TableViewController implements BaseController, Initializable, Callb
                 switch (this.type) {
                     case APPOINTMENT:
                         Appointment appointment = APIRestConfig.getAppointmentsService().appointmentGetById(APIRestConfig.token, elementId).execute().body();
-                        popUpAlert(Util.getString("title.appointment"),
+                        Util.popUpAlert(Util.getString("title.appointment"),
                                 "• " + Util.getString("text.service") + ": " + appointment.getService().getName() + "\n" +
                                 "• " + Util.getString("text.username") + ": " + appointment.getUser().getUsername() + "\n" +
                                         "• " + Util.getString("text.date") + ": " + appointment.getDate() + "\n" +
                                         "• " + Util.getString("text.hour") + ": " + appointment.getTime() + "\n"
-                        );
+                        ,Alert.AlertType.INFORMATION);
                         break;
                     case USER:
                         User user = APIRestConfig.getUsersService().usersGetById(APIRestConfig.token, elementId).execute().body();
@@ -181,23 +156,23 @@ public class TableViewController implements BaseController, Initializable, Callb
                         if (user.getGender().toString().equals("Female")) {
                             gender = Util.getString("text.female");
                         }
-                        popUpAlert(Util.getString("title.user"),
+                        Util.popUpAlert(Util.getString("title.user"),
                         "• " + Util.getString("text.username") + ": " + user.getUsername() + "\n" +
                                 "• " + Util.getString("text.name") + ": " + user.getName() + "\n" +
                                 "• " + Util.getString("text.surname") + ": " + user.getSurname() + "\n" +
                                 "• " + Util.getString("text.email") + ": " + user.getEmail() + "\n" +
                                 "• " + Util.getString("text.telephone") + ": " + user.getPhoneNumber() + "\n" +
                                 "• " + Util.getString("text.gender") + ": " + gender + "\n"
-                        );
+                        ,Alert.AlertType.INFORMATION);
                         break;
                     case SERVICE:
                         Service service = APIRestConfig.getServicesService().serviceGetById(APIRestConfig.token, elementId).execute().body();
-                        popUpAlert(Util.getString("text.service"),
+                        Util.popUpAlert(Util.getString("text.service"),
                                 "• " + Util.getString("text.service") + ": " + service.getName() + "\n" +
                                         "• " + Util.getString("text.description") + ": " + service.getDescription() + "\n" +
                                         "• " + Util.getString("text.price") + ": " + service.getPrice() + "\n" +
                                         "• " + Util.getString("text.stock") + ": " + service.getStock() + "\n"
-                        );
+                        ,Alert.AlertType.INFORMATION);
                         break;
                 }
 
@@ -214,7 +189,7 @@ public class TableViewController implements BaseController, Initializable, Callb
                 e.printStackTrace();
             }
         } else {
-            popUpAlert(Util.getString("title.info"), Util.getString("title.noTableItemSelected"));
+            Util.popUpAlert(Util.getString("title.info"), Util.getString("title.noTableItemSelected"),Alert.AlertType.INFORMATION);
         }
     }
 

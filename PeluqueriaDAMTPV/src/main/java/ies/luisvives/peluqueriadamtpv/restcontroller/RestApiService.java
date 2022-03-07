@@ -1,6 +1,7 @@
 package ies.luisvives.peluqueriadamtpv.restcontroller;
 
 import ies.luisvives.peluqueriadamtpv.model.Service;
+import ies.luisvives.peluqueriadamtpv.model.createDTOs.CreateService;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -24,7 +25,7 @@ public interface RestApiService {
     Call<Service> serviceGetById(@Header("Authorization") String token, @Path("id") String id);
 
     @POST(APIRestConfig.API_PATH + "/services/")
-    Call<Service> insertService(@Header("Authorization") String token, @Body Service service);
+    Call<Service> insertService(@Header("Authorization") String token, @Body CreateService service);
 
     @PUT(APIRestConfig.API_PATH + "/services/{id}")
     Call<Service> updateService(@Header("Authorization") String token);

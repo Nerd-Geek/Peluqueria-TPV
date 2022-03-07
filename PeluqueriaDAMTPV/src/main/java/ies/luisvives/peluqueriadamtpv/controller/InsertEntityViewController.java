@@ -1,24 +1,24 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import ies.luisvives.peluqueriadamtpv.model.Appointment;
 import ies.luisvives.peluqueriadamtpv.model.Service;
 import ies.luisvives.peluqueriadamtpv.model.User;
 import ies.luisvives.peluqueriadamtpv.model.UserGender;
+import ies.luisvives.peluqueriadamtpv.model.createDTOs.CreateService;
+import ies.luisvives.peluqueriadamtpv.model.createDTOs.CreateUser;
 import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
 import ies.luisvives.peluqueriadamtpv.utils.Util;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import lombok.SneakyThrows;
-import retrofit2.Response;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -91,16 +91,17 @@ public class InsertEntityViewController implements BaseController{
         fieldsBox.getChildren().add(field);
     }
 
-    private void addEntityField(String name) {
+    private TextField addEntityField(String name) {
         labelsBox.getChildren().add(new Label(name));
         TextField field = new TextField();
         textfields.add(field);
         entityFields.put(name, field);
         fieldsBox.getChildren().add(field);
+        return field;
     }
 
     @FXML
-    protected void insertEntity() {
+    protected void insertEntity() throws IOException {
         if(currentType == USER_TYPE){
             insertUser();
         }
@@ -109,7 +110,7 @@ public class InsertEntityViewController implements BaseController{
         }
     }
 
-    private void insertService() {
+    private void insertService() throws IOException {
         TextField[] information = getInformationArray();
 
         String user = information[0].getText();
@@ -117,9 +118,10 @@ public class InsertEntityViewController implements BaseController{
         String description = information[1].getText();
         Double price = Double.parseDouble(information[2].getText()); //TODO: CHEQUEAR
         Integer stock = Integer.parseInt(information[3].getText()); //TODO: CHEQUEAR
-        Service service = new Service(image, user, description, price, stock);
+        CreateService service = new CreateService(image, user, description, price, stock);
 
         //TODO: Insertar en BD y avisar de mensajes
+        APIRestConfig.getServicesService().insertService(APIRestConfig.token, service).execute();
         System.out.println(service);
     }
 
@@ -137,11 +139,16 @@ public class InsertEntityViewController implements BaseController{
         String telephone = information[4].getText();
         String email = information[5].getText();
         UserGender gender = UserGender.Male; //TODO: DO
-        User user = new User(image, username, name, surname,password, telephone, email, gender);
+        CreateUser user = new CreateUser(image, username, name, surname,password, telephone, email, gender);
         //TODO: Insertar en BD y avisar de mensajes
         System.out.println(user);
 
-        APIRestConfig.getUsersService().insertUsers(APIRestConfig.token, user).execute();
+        User re = APIRestConfig.getUsersService().insertUsers(APIRestConfig.token, user).execute().body();
+        if (re != null){
+
+        }else{
+
+        }
         System.out.println("DONE"); //TODO: ALERT MSG
         //TODO: CHECK PREVIUS CONDIITONS
     }

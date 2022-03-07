@@ -2,6 +2,7 @@ package ies.luisvives.peluqueriadamtpv.restcontroller;
 
 
 import ies.luisvives.peluqueriadamtpv.model.Appointment;
+import ies.luisvives.peluqueriadamtpv.model.createDTOs.CreateAppointmentDTO;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -29,8 +30,8 @@ public interface RestAPIAppointments {
     @GET(APIRestConfig.API_PATH + "/appointments/{id}")
     Call<Appointment> appointmentGetById(@Header("Authorization") String token, @Path("id") String id);
 
-    @POST(APIRestConfig.API_PATH + "/appointments/create")
-    Call<Appointment> insertAppointments(@Header("Authorization") String token, @Body Appointment appointment);
+    @POST(APIRestConfig.API_PATH + "/appointments/")
+    Call<Appointment> insertAppointments(@Header("Authorization") String token, @Body CreateAppointmentDTO appointment);
 
     @PUT(APIRestConfig.API_PATH + "/appointments/{id}")
     Call<Appointment> updateAppointments(@Header("Authorization") String token);
