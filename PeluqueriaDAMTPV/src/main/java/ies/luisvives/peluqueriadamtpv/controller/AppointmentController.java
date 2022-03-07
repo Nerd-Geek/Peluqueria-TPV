@@ -207,7 +207,7 @@ public class AppointmentController implements BaseController {
         //Set values
         if (date.isPresent() && time.isPresent() && userCondition && service.isPresent()) {
             Appointment ap = new Appointment();
-            ap.setId(UUID.randomUUID().toString()); //TODO: why UUID set here? - vulnerability
+            ap.setId(UUID.randomUUID().toString());
             ap.setDate(LocalDate.parse(date.get()));
             ap.setTime(LocalTime.parse(time.get()));
             ap.setService(service.get());

@@ -4,7 +4,6 @@ import ies.luisvives.peluqueriadamtpv.model.UserConfiguration;
 import ies.luisvives.peluqueriadamtpv.utils.Util;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;

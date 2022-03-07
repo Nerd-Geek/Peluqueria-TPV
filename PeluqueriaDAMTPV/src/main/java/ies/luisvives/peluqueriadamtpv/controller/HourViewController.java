@@ -1,6 +1,5 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,37 +12,63 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class HourViewController {
-    @FXML private FontIcon iconTime;
+    @FXML
+    private FontIcon iconTime;
 
-    @FXML private Label hourTitle1;
-    @FXML private Label hourTitle2;
-    @FXML private Label hourTitle3;
-    @FXML private Label hourTitle4;
-    @FXML private Label hourTitle5;
+    @FXML
+    private Label hourTitle1;
+    @FXML
+    private Label hourTitle2;
+    @FXML
+    private Label hourTitle3;
+    @FXML
+    private Label hourTitle4;
+    @FXML
+    private Label hourTitle5;
 
-    @FXML private Button hourOne;
-    @FXML private Button hourOne2;
-    @FXML private Button hourOne3;
-    @FXML private Button hourOne4;
-    @FXML private Button hourOne5;
+    @FXML
+    private Button hourOne;
+    @FXML
+    private Button hourOne2;
+    @FXML
+    private Button hourOne3;
+    @FXML
+    private Button hourOne4;
+    @FXML
+    private Button hourOne5;
 
-    @FXML private Button hourTwo;
-    @FXML private Button hourTwo2;
-    @FXML private Button hourTwo3;
-    @FXML private Button hourTwo4;
-    @FXML private Button hourTwo5;
+    @FXML
+    private Button hourTwo;
+    @FXML
+    private Button hourTwo2;
+    @FXML
+    private Button hourTwo3;
+    @FXML
+    private Button hourTwo4;
+    @FXML
+    private Button hourTwo5;
 
-    @FXML private Button hourThree;
-    @FXML private Button hourThree2;
-    @FXML private Button hourThree3;
-    @FXML private Button hourThree4;
-    @FXML private Button hourThree5;
+    @FXML
+    private Button hourThree;
+    @FXML
+    private Button hourThree2;
+    @FXML
+    private Button hourThree3;
+    @FXML
+    private Button hourThree4;
+    @FXML
+    private Button hourThree5;
 
-    @FXML private Button hourFour;
-    @FXML private Button hourFour2;
-    @FXML private Button hourFour3;
-    @FXML private Button hourFour4;
-    @FXML private Button hourFour5;
+    @FXML
+    private Button hourFour;
+    @FXML
+    private Button hourFour2;
+    @FXML
+    private Button hourFour3;
+    @FXML
+    private Button hourFour4;
+    @FXML
+    private Button hourFour5;
 
     private static final int DAY = 1;
     private static final int AFTERNOON = 2;
@@ -59,7 +84,7 @@ public class HourViewController {
 
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         refeshTableContent();
     }
 
@@ -69,9 +94,9 @@ public class HourViewController {
     }
 
     private String convertHourStr(int startHour) {
-        if (startHour <= 9){
+        if (startHour <= 9) {
             return "0" + startHour;
-        }else{
+        } else {
             return startHour + "";
         }
     }
@@ -80,7 +105,7 @@ public class HourViewController {
     protected void onButtonHourPressed(ActionEvent event) {
         Button b = (Button) event.getSource();
 
-        if (!Objects.equals(actualDate.get(), "")){
+        if (!Objects.equals(actualDate.get(), "")) {
             actualTimeString = b.getText();
             localTime = stringToTime(actualTimeString);
             setActualTimeStringFormat();
@@ -93,7 +118,7 @@ public class HourViewController {
     private void setActualTimeStringFormat() {
         String[] time = actualTimeString.split(":");
         String hour = time[0];
-        if (hour.length() <= 1){
+        if (hour.length() <= 1) {
             hour = "0" + hour;
         }
         actualTimeString = hour + ":" + time[1];
@@ -112,15 +137,15 @@ public class HourViewController {
         this.actualDate.addListener(e -> this.refreshHoursTable());
     }
 
-    public Optional<String> getActualTimeString(){
-        if (Objects.equals(this.actualTimeString, "")){
+    public Optional<String> getActualTimeString() {
+        if (Objects.equals(this.actualTimeString, "")) {
             return Optional.empty();
-        }else{
+        } else {
             return Optional.of(this.actualTimeString);
         }
     }
 
-    public void refreshHoursTable(){
+    public void refreshHoursTable() {
         actualTimeString = "";
         updateHoursTable();
     }
@@ -129,9 +154,9 @@ public class HourViewController {
         int startHour = 8;
         int columnQuantity = 5;
 
-        if (actualPage == AFTERNOON){
+        if (actualPage == AFTERNOON) {
             startHour += columnQuantity;
-        } else if (actualPage == NIGHT){
+        } else if (actualPage == NIGHT) {
             startHour += (columnQuantity) * 2;
         }
 
@@ -178,27 +203,27 @@ public class HourViewController {
     }
 
     private void updateActualPage() {
-        if (actualPage == DAY){
+        if (actualPage == DAY) {
             iconTime.setIconLiteral("fas-sun");
-        }else if (actualPage == AFTERNOON) {
+        } else if (actualPage == AFTERNOON) {
             iconTime.setIconLiteral("fas-cloud-sun");
-        }else if (actualPage == NIGHT) {
+        } else if (actualPage == NIGHT) {
             iconTime.setIconLiteral("fas-moon");
         }
     }
 
     @FXML
     protected void prevHourButtonAction() {
-        if (actualPage > 1){
-            actualPage -=1;
+        if (actualPage > 1) {
+            actualPage -= 1;
         }
         refeshTableContent();
     }
 
     @FXML
     protected void nextHourButtonAction() {
-        if (actualPage < maxPages){
-            actualPage +=1;
+        if (actualPage < maxPages) {
+            actualPage += 1;
         }
         refeshTableContent();
     }
