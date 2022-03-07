@@ -165,7 +165,6 @@ public class AppointmentController implements BaseController {
 
     private String getErrorAppointment(Appointment appointment) throws IOException {
         LocalDate localDate = appointment.getDate();
-        //TODO: DEL ? ---String[] time = appointment.getTime().split(":");
         LocalTime dateTime = hourViewController.getActualTime();
         Util.getLeftStock(appointment);
         if (localDate.isBefore(LocalDate.now()) || (dateTime.isBefore(LocalTime.now()) && localDate.isEqual(LocalDate.now()))) {

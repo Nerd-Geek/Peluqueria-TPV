@@ -66,7 +66,6 @@ public class HourViewController {
     private void refeshTableContent() {
         updateActualPage();
         updateHoursTable();
-        //this.actualTimeString = ""; //TODO: hide user friendly?
     }
 
     private String convertHourStr(int startHour) {
@@ -87,7 +86,7 @@ public class HourViewController {
             setActualTimeStringFormat();
             System.out.println("REST petition with time " + localTime);
             System.out.println(actualTimeString);
-            tableViewController.setTime(localTime); //TODO: DO
+            tableViewController.setTime(localTime);
         }
     }
 

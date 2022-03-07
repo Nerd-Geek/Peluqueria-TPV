@@ -115,16 +115,24 @@ public class InsertEntityViewController implements BaseController{
         String user = information[0].getText();
         String image = ""; //TODO: DO
         String description = information[1].getText();
-        Double price = Double.parseDouble(information[2].getText()); //TODO: CHEQUEAR
-        Integer stock = Integer.parseInt(information[3].getText()); //TODO: CHEQUEAR
-        CreateService service = new CreateService(image, user, description, price, stock);
 
-        Service re = APIRestConfig.getServicesService().insertService(APIRestConfig.token, service).execute().body();
-        if (re == null){
-            String moreInfo = getErrorService(service);
-            Util.popUpAlert(Util.getString("title.error"), Util.getString("error.serviceNotCreated") + "\n" + moreInfo, Alert.AlertType.ERROR);
-        }else{
-            Util.popUpAlert(Util.getString("title.info"), Util.getString("text.userCreated"), Alert.AlertType.INFORMATION);
+        try{
+            Double price = Double.parseDouble(information[2].getText()); //TODO: CHEQUEAR
+            Integer stock = Integer.parseInt(information[3].getText()); //TODO: CHEQUEAR
+
+            CreateService service = new CreateService(image, user, description, price, stock);
+
+            Service re = APIRestConfig.getServicesService().insertService(APIRestConfig.token, service).execute().body();
+            if (re == null){
+                String moreInfo = getErrorService(service);
+                Util.popUpAlert(Util.getString("title.error"), Util.getString("error.serviceNotCreated") + "\n" + moreInfo, Alert.AlertType.ERROR);
+            }else{
+                Util.popUpAlert(Util.getString("title.info"), Util.getString("text.userCreated"), Alert.AlertType.INFORMATION);
+            }
+        }catch(NumberFormatException e){
+            Util.popUpAlert(Util.getString("title.error"),
+                    Util.getString("error.serviceNotCreated") + "\n" +
+                            Util.getString("error.priceAndStockMustBeANumber"), Alert.AlertType.ERROR);
         }
     }
 

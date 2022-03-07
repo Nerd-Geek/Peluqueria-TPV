@@ -16,7 +16,7 @@
                 <Button fx:id="prev_hour_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#prevHourButtonAction" text="%text.prev" HBox.hgrow="NEVER" />
                 <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="60.0" textAlignment="CENTER">
                     <graphic>
-                        <FontIcon fx:id="iconTime" iconColor="BLACK" iconLiteral="fas-sun" iconSize="35" styleClass="FontIcon" /> <!-- TODO: Aplicar iconColor WHITE en caso de tema oscuro -->
+                        <FontIcon fx:id="iconTime" iconColor="BLACK" iconLiteral="fas-sun" iconSize="35" styleClass="FontIcon" />
                     </graphic>
                 </Label>
 
