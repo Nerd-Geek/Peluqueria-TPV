@@ -138,8 +138,8 @@ public class AppointmentController implements BaseController {
         if (appointmentOpt.isPresent()) {
             Appointment appointment = appointmentOpt.get();
             CreateAppointmentDTO createAppointment = new CreateAppointmentDTO();
-            createAppointment.setDate(appointment.getDate());
-            createAppointment.setTime(appointment.getTime());
+            createAppointment.setDate(appointment.getDate().toString());
+            createAppointment.setTime(appointment.getTime().toString());
             createAppointment.setServiceId(appointment.getService().getId());
             createAppointment.setUserId(appointment.getUser().getId());
 
@@ -164,7 +164,7 @@ public class AppointmentController implements BaseController {
     }
 
     private String getErrorAppointment(Appointment appointment) throws IOException {
-        LocalDate localDate = LocalDate.parse(appointment.getDate());
+        LocalDate localDate = appointment.getDate();
         //TODO: DEL ? ---String[] time = appointment.getTime().split(":");
         LocalTime dateTime = hourViewController.getActualTime();
         Util.getLeftStock(appointment);
@@ -209,8 +209,8 @@ public class AppointmentController implements BaseController {
         if (date.isPresent() && time.isPresent() && userCondition && service.isPresent()) {
             Appointment ap = new Appointment();
             ap.setId(UUID.randomUUID().toString()); //TODO: why UUID set here? - vulnerability
-            ap.setDate(date.get());
-            ap.setTime(time.get());
+            ap.setDate(LocalDate.parse(date.get()));
+            ap.setTime(LocalTime.parse(time.get()));
             ap.setService(service.get());
             user.ifPresent(ap::setUser);
             appointment = Optional.of(ap);

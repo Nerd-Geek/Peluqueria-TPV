@@ -12,8 +12,8 @@ public class AppointmentListMapper {
                 appointment.getId()
                 , appointment.getUser().getUsername()
                 , appointment.getService().getName()
-                , appointment.getTime()
-                , appointment.getDate()
+                , appointment.getTime().toString()
+                , appointment.getDate().toString()
         );
     }
 

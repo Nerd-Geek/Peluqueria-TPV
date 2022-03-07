@@ -81,7 +81,7 @@ public class Util {
     }
 
     public static Integer getLeftStock(Appointment appointment) throws IOException {
-        LocalDate localDate = LocalDate.parse(appointment.getDate());
+        LocalDate localDate = appointment.getDate();
         int leftStock = appointment.getService().getStock();
 
         List<Appointment> response = APIRestConfig.getAppointmentsService()
@@ -90,7 +90,7 @@ public class Util {
         AtomicInteger count = new AtomicInteger();
         assert response != null;
         response.forEach(e -> {
-            if (e.getTime().equalsIgnoreCase(appointment.getTime())) {
+            if (e.getTime().compareTo(appointment.getTime()) == 0) {
                 System.out.println("1eyahhsd9");
                 count.addAndGet(1);
             }
