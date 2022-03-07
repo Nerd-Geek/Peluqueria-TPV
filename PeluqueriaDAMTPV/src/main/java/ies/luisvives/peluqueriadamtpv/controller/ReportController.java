@@ -209,7 +209,7 @@ public class ReportController implements BaseController, Initializable {
 
         //Add amount of money
         listAppointments.forEach(e -> {
-            String[] appointmentDate = e.getDate().split("-");
+            String[] appointmentDate = e.getDate().toString().split("-");
             //Check actual year and month
             if (Integer.parseInt(appointmentDate[0]) == actualYear && Integer.parseInt(appointmentDate[1]) == month) {
                 int dayKey = Integer.parseInt(appointmentDate[2]);
