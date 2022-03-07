@@ -9,10 +9,7 @@ import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
 import ies.luisvives.peluqueriadamtpv.utils.Util;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import lombok.SneakyThrows;
@@ -123,7 +120,7 @@ public class InsertEntityViewController implements BaseController{
         CreateService service = new CreateService(image, user, description, price, stock);
 
         Service re = APIRestConfig.getServicesService().insertService(APIRestConfig.token, service).execute().body();
-        if (re != null){
+        if (re == null){
             String moreInfo = getErrorService(service);
             Util.popUpAlert(Util.getString("title.error"), Util.getString("error.serviceNotCreated") + "\n" + moreInfo, Alert.AlertType.ERROR);
         }else{
@@ -177,15 +174,15 @@ public class InsertEntityViewController implements BaseController{
     }
 
     private String getErrorService(CreateService service) {
-//        service.get
-//        if (!filled.get()){
-//            return Util.getString("error.dataNotFilled");
-//        } else if (!validMail(user.getEmail())){
-//            return Util.getString("error.invalidEmail");
-//        }else{
-//            return "";
-//        }
-        return "";
+        if (service.getName() == null || service.getName().isEmpty()) {
+            return Util.getString("error.nameEmpty");
+        } else if (service.getPrice() <= 0) {
+            return Util.getString("error.priceGreaterZero");
+        } else if (service.getStock() < 0) {
+            return Util.getString("error.stockGreaterZero");
+        }else{
+            return "";
+        }
     }
 
     private boolean validMail(String mail) {

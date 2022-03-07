@@ -73,6 +73,7 @@ public class ReportController implements BaseController, Initializable {
 
     private void configIncomeAmountChart() {
         incomeAmount.setTitle(Util.getString("title.incomeAmount"));
+        incomeAmount.setLegendVisible(false);
         listAppointments.forEach(e -> {
             for (int m = 1; m <= 12; m++) {
                 XYChart.Series<String, Number> series = new XYChart.Series<>();
