@@ -14,6 +14,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import lombok.SneakyThrows;
@@ -32,8 +33,6 @@ import java.util.stream.Collectors;
 public class InsertEntityViewController implements BaseController {
     @FXML
     private Label titleLabel;
-    @FXML
-    private VBox labelsBox;
     @FXML
     private VBox fieldsBox;
     @FXML
@@ -91,20 +90,24 @@ public class InsertEntityViewController implements BaseController {
     }
 
     private void addGenderChoiceBox() {
+        HBox hbox = new HBox();
         String name = "gender";
-        labelsBox.getChildren().add(new Label(name));
-        fieldGender = new ChoiceBox<>();
-        fieldGender.setItems(FXCollections.observableList(Arrays.stream(UserGender.values()).collect(Collectors.toList())));
-        entityChoiceBoxes.put(name, fieldGender);
-        fieldsBox.getChildren().add(fieldGender);
+        ChoiceBox<UserGender> field = new ChoiceBox<>();
+        field.setItems(FXCollections.observableList(Arrays.stream(UserGender.values()).collect(Collectors.toList())));
+        entityChoiceBoxes.put(name, field);
+        hbox.getChildren().add(new Label(name));
+        hbox.getChildren().add(field);
+        fieldsBox.getChildren().add(hbox);
     }
 
     private TextField addEntityField(String name) {
-        labelsBox.getChildren().add(new Label(name));
+        HBox hbox = new HBox();
         TextField field = new TextField();
         textfields.add(field);
         entityFields.put(name, field);
-        fieldsBox.getChildren().add(field);
+        hbox.getChildren().add(new Label(name));
+        hbox.getChildren().add(field);
+        fieldsBox.getChildren().add(hbox);
         return field;
     }
 
