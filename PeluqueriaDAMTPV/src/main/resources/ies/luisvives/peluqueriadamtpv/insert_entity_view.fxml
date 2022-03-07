@@ -5,41 +5,38 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ies.luisvives.peluqueriadamtpv.controller.InsertEntityViewController">
-   <children>
-      <Label fx:id="titleLabel" />
-      <HBox>
-              <children>
-                  <VBox fx:id="labelsBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <VBox fx:id="fieldsBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
-                      <HBox.margin>
-                          <Insets />
-                      </HBox.margin>
-                  </VBox>
-                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
-                      <children>
-                          <ImageView fx:id="uploadImageView" fitHeight="114.0" fitWidth="141.0" pickOnBounds="true" preserveRatio="true">
-                              <VBox.margin>
-                                  <Insets />
-                              </VBox.margin>
-                          </ImageView>
-                          <TextField fx:id="imageURLTextField" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                              <VBox.margin>
-                                  <Insets top="5.0" />
-                              </VBox.margin>
-                          </TextField>
-                          <Button fx:id="upload_image_button" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%text.upload" translateX="-33.0">
-                              <VBox.margin>
-                                  <Insets left="70.0" top="5.0" />
-                              </VBox.margin>
-                          </Button>
-                      </children>
-                      <HBox.margin>
-                          <Insets left="90.0" />
-                      </HBox.margin>
-                  </VBox>
-              </children>
-      </HBox>
-              <Button onAction="#insertEntity" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%text.create" />
-   </children>
-</VBox>
+<BorderPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ies.luisvives.peluqueriadamtpv.controller.InsertEntityViewController">
+   <center>
+            <VBox fx:id="fieldsBox" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" />
+   </center>
+   <top>
+      <Label fx:id="titleLabel" BorderPane.alignment="CENTER" />
+   </top>
+   <left>
+            <VBox fx:id="labelsBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" BorderPane.alignment="TOP_LEFT" />
+   </left>
+   <bottom>
+              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#insertEntity" text="%text.create" BorderPane.alignment="CENTER" />
+   </bottom>
+   <right>
+            <VBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+                <children>
+                    <ImageView fx:id="uploadImageView" fitHeight="114.0" fitWidth="141.0" pickOnBounds="true" preserveRatio="true">
+                        <VBox.margin>
+                            <Insets />
+                        </VBox.margin>
+                    </ImageView>
+                    <TextField fx:id="imageURLTextField" alignment="TOP_CENTER" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                        <VBox.margin>
+                            <Insets top="5.0" />
+                        </VBox.margin>
+                    </TextField>
+                    <Button fx:id="upload_image_button" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%text.upload" translateX="-33.0">
+                        <VBox.margin>
+                            <Insets left="70.0" top="5.0" />
+                        </VBox.margin>
+                    </Button>
+                </children>
+            </VBox>
+   </right>
+</BorderPane>

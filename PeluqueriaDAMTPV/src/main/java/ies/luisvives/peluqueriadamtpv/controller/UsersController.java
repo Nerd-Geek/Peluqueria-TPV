@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import retrofit2.Response;
@@ -43,7 +44,7 @@ public class UsersController implements BaseController, Initializable, Callback 
     @FXML
     private TableViewController tableViewController;
     @FXML
-    private VBox insertEntityView;
+    private BorderPane insertEntityView;
     @FXML
     private InsertEntityViewController insertEntityViewController;
 
