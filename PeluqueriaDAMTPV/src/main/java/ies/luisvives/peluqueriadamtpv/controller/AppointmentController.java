@@ -6,8 +6,6 @@ import ies.luisvives.peluqueriadamtpv.model.User;
 import ies.luisvives.peluqueriadamtpv.model.createDTOs.CreateAppointmentDTO;
 import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
 import ies.luisvives.peluqueriadamtpv.utils.Util;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -222,7 +220,7 @@ public class AppointmentController implements BaseController {
 
     private Optional<String> getTime(boolean alert) {
         Optional<String> str = hourViewController.getActualTimeString();
-    if (alert && str.isEmpty()) {
+        if (alert && str.isEmpty()) {
             Util.popUpAlert(Util.getString("title.info"), Util.getString("error.noTimeSet"), Alert.AlertType.INFORMATION);
         }
         return str;

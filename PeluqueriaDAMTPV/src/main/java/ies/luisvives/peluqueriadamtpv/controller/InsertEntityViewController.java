@@ -15,11 +15,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class InsertEntityViewController implements BaseController{
@@ -120,18 +122,19 @@ public class InsertEntityViewController implements BaseController{
         Integer stock = Integer.parseInt(information[3].getText()); //TODO: CHEQUEAR
         CreateService service = new CreateService(image, user, description, price, stock);
 
-        //TODO: Insertar en BD y avisar de mensajes
-        APIRestConfig.getServicesService().insertService(APIRestConfig.token, service).execute();
-        System.out.println(service);
+        Service re = APIRestConfig.getServicesService().insertService(APIRestConfig.token, service).execute().body();
+        if (re != null){
+            String moreInfo = getErrorService(service);
+            Util.popUpAlert(Util.getString("title.error"), Util.getString("error.serviceNotCreated") + "\n" + moreInfo, Alert.AlertType.ERROR);
+        }else{
+            Util.popUpAlert(Util.getString("title.info"), Util.getString("text.userCreated"), Alert.AlertType.INFORMATION);
+        }
     }
 
     @SneakyThrows
     private void insertUser() {
         TextField[] information = getInformationArray();
-
         String image = ""; //TODO: DO
-
-        //TODO: DO CHEQUEAR TODO
         String username = information[0].getText();
         String name = information[1].getText();
         String surname = information[2].getText();
@@ -140,22 +143,55 @@ public class InsertEntityViewController implements BaseController{
         String email = information[5].getText();
         UserGender gender = UserGender.Male; //TODO: DO
         CreateUser user = new CreateUser(image, username, name, surname,password, telephone, email, gender);
-        //TODO: Insertar en BD y avisar de mensajes
-        System.out.println(user);
 
         User re = APIRestConfig.getUsersService().insertUsers(APIRestConfig.token, user).execute().body();
-        if (re != null){
-
+        if (re == null){
+            String moreInfo = getErrorUser(user);
+            Util.popUpAlert(Util.getString("title.error"), Util.getString("error.userNotCreated") + "\n" + moreInfo, Alert.AlertType.ERROR);
         }else{
-
+            Util.popUpAlert(Util.getString("title.info"), Util.getString("text.userCreated"), Alert.AlertType.INFORMATION);
         }
-        System.out.println("DONE"); //TODO: ALERT MSG
-        //TODO: CHECK PREVIUS CONDIITONS
     }
 
     private TextField[] getInformationArray() {
         TextField[] information = new TextField[textfields.size()];
         textfields.toArray(information);
         return information;
+    }
+
+    private String getErrorUser(CreateUser user){
+        AtomicBoolean filled = new AtomicBoolean(true);
+        Arrays.stream(getInformationArray()).forEach(e -> {
+            if (Objects.equals(e.getText(), "")){
+                filled.set(false);
+            }
+        });
+
+        if (!filled.get()){
+            return Util.getString("error.dataNotFilled");
+        } else if (!validMail(user.getEmail())){
+            return Util.getString("error.invalidEmail");
+        }else{
+            return "";
+        }
+    }
+
+    private String getErrorService(CreateService service) {
+//        service.get
+//        if (!filled.get()){
+//            return Util.getString("error.dataNotFilled");
+//        } else if (!validMail(user.getEmail())){
+//            return Util.getString("error.invalidEmail");
+//        }else{
+//            return "";
+//        }
+        return "";
+    }
+
+    private boolean validMail(String mail) {
+        String regex = ".*@.*\\\\..*";
+        Pattern pat = Pattern.compile(regex);
+        Matcher mat = pat.matcher(mail);
+        return mat.matches();
     }
 }
