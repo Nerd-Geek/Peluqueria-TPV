@@ -1,38 +1,30 @@
 package ies.luisvives.peluqueriadamtpv.controller;
 
-import ies.luisvives.peluqueriadamtpv.App;
 import ies.luisvives.peluqueriadamtpv.model.Appointment;
+import ies.luisvives.peluqueriadamtpv.model.Service;
+import ies.luisvives.peluqueriadamtpv.model.User;
+import ies.luisvives.peluqueriadamtpv.model.createDTOs.CreateAppointmentDTO;
 import ies.luisvives.peluqueriadamtpv.restcontroller.APIRestConfig;
+import ies.luisvives.peluqueriadamtpv.utils.Util;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.util.Callback;
+import javafx.scene.layout.VBox;
 import retrofit2.Response;
 
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-public class AppointmentController implements Initializable {
-    private Calendar calendar;
-    @FXML
-    private StackPane stackPane;
-    @FXML
-    private Label month_string;
-    @FXML
-    private Label year_string;
-    @FXML
-    private Button prev_month_button;
-    @FXML
-    private Button next_month_button;
+public class AppointmentController implements BaseController {
     @FXML
     private Button prevServiceButton;
     @FXML
@@ -40,229 +32,293 @@ public class AppointmentController implements Initializable {
     @FXML
     private Button createAppointmentButton;
     @FXML
-    private Button day_button_0_0;
+    private HBox tableView;
     @FXML
-    private Button day_button_0_1;
+    private TableViewController tableViewController;
     @FXML
-    private Button day_button_0_2;
+    private VBox calendarView;
     @FXML
-    private Button day_button_0_3;
+    private CalendarViewController calendarViewController;
     @FXML
-    private Button day_button_0_4;
+    private HourViewController hourViewController;
     @FXML
-    private Button day_button_0_5;
-    @FXML
-    private Button day_button_0_6;
-    @FXML
-    private Button day_button_1_0;
-    @FXML
-    private Button day_button_1_1;
-    @FXML
-    private Button day_button_1_2;
-    @FXML
-    private Button day_button_1_3;
-    @FXML
-    private Button day_button_1_4;
-    @FXML
-    private Button day_button_1_5;
-    @FXML
-    private Button day_button_1_6;
-    @FXML
-    private Button day_button_2_0;
-    @FXML
-    private Button day_button_2_1;
-    @FXML
-    private Button day_button_2_2;
-    @FXML
-    private Button day_button_2_3;
-    @FXML
-    private Button day_button_2_4;
-    @FXML
-    private Button day_button_2_5;
-    @FXML
-    private Button day_button_2_6;
-    @FXML
-    private Button day_button_3_0;
-    @FXML
-    private Button day_button_3_1;
-    @FXML
-    private Button day_button_3_2;
-    @FXML
-    private Button day_button_3_3;
-    @FXML
-    private Button day_button_3_4;
-    @FXML
-    private Button day_button_3_5;
-    @FXML
-    private Button day_button_3_6;
-    @FXML
-    private Button day_button_4_0;
-    @FXML
-    private Button day_button_4_1;
-    @FXML
-    private Button day_button_4_2;
-    @FXML
-    private Button day_button_4_3;
-    @FXML
-    private Button day_button_4_4;
-    @FXML
-    private Button day_button_4_5;
-    @FXML
-    private Button day_button_4_6;
-    @FXML
-    private Button day_button_5_0;
-    @FXML
-    private Button day_button_5_1;
-    @FXML
-    private Button day_button_5_2;
-    @FXML
-    private Button day_button_5_3;
-    @FXML
-    private Button day_button_5_4;
-    @FXML
-    private Button day_button_5_5;
-    @FXML
-    private Button day_button_5_6;
-
-    private List<List<Button>> gridButtons;
-    private ListView<Object> list_view_appointments;
+    private TextField usernameField;
 
     @FXML
-    private HBox appointmentsTableView;
-    @FXML
-    private AppointmentTableController appointmentsTableViewController;
+    private Label labelService;
 
-    private String userSearch;
+    @FXML
+    private Label labelServiceStock;
+
+    private ObservableList<Service> services;
+
+    private int actualServiceSelected = 0;
 
     public AppointmentController() {
-        calendar = Calendar.getInstance();
-        gridButtons = new ArrayList<>();
-        userSearch = "";
     }
 
     @FXML
-    protected void initialize() {
-        appointmentsTableViewController.setSearchUser(this.userSearch);
-    }
-
-    private void setButtonNamesForMonthYear(Calendar calendar) {
-        gridButtons.forEach(l -> l.forEach(b -> {
-            b.setText("");
-            b.setDisable(true);
-        }));
-        int firstDayIndex = calculateFirstDayPosition(calendar);
-        int[] lastPosition = calculateLastDayPosition(calendar, firstDayIndex);
-        int lastDayIndex = 6;
-//		int lastRow = 4;
-//		if (firstDayIndex == 5 && calendar.getActualMaximum(Calendar.DATE) != 30 || firstDayIndex == 6)
-//			lastRow = 5;
-        int day = 1;
-        System.out.println(lastPosition[0] + " " + lastPosition[1]);
-        for (int i = 0; i < lastPosition[1]; i++) {
-            if (i != 0) firstDayIndex = 0;
-            if (i == lastPosition[1] - 1) {
-                lastDayIndex = lastPosition[0];
+    protected void initialize() throws IOException {
+        tableViewController.setSearchQuery("");
+        tableViewController.setEntityForTable(TableViewController.APPOINTMENT);
+        calendarViewController.setTableViewController(tableViewController);
+        hourViewController.setExternalData(tableViewController, calendarViewController.getActualDateStringProperty());
+        initServices();
+        usernameField.setOnAction(e -> {
+            try {
+                createAppointment();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            for (int j = firstDayIndex; j <= lastDayIndex; j++) {
-                gridButtons.get(i).get(j).setText(day + "");
-                if (
-                        (day >= calendar.get(Calendar.DAY_OF_MONTH)
-                                && calendar.get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH)
-                                && calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)
-                        )
-                                || calendar.getTime().after(Calendar.getInstance().getTime()))
-                    gridButtons.get(i).get(j).setDisable(false);
-                day++;
+        });
+    }
+
+    private void refreshAll() {
+        try {
+            updateService();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initServices() throws IOException {
+        Response<List<Service>> response = null;
+        try {
+            response = APIRestConfig.getServicesService().serviceGetAll(APIRestConfig.token).execute();
+            if (response.body() != null) {
+                services = FXCollections.observableArrayList(response.body());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        updateService();
+    }
+
+    /**
+     * Update the service data
+     * (This method establishes first service by default if exists)
+     */
+    private void updateService() throws IOException {
+        if (!services.isEmpty()) {
+            Service service = services.get(actualServiceSelected);
+            labelService.setText(String.valueOf(service.getName()));
+
+            Optional<Appointment> apOpt = appointmentCreate(false, false);
+            if (apOpt.isPresent()) {
+                labelServiceStock.setText("x" + Util.getLeftStock(apOpt.get()));
+            } else {
+                labelServiceStock.setText("?");
+            }
+        } else {
+            labelService.setText(Util.getString("text.noServices"));
+            labelServiceStock.setText("");
+        }
+    }
+
+    @FXML
+    protected void prevServiceAction() throws IOException {
+        if (!services.isEmpty() && actualServiceSelected > 0) {
+            actualServiceSelected -= 1;
+        }
+        updateService();
+    }
+
+    @FXML
+    protected void nextServiceAction() throws IOException {
+        if (!services.isEmpty() && actualServiceSelected < services.size() - 1) {
+            actualServiceSelected += 1;
+        }
+        updateService();
+    }
+
+    @FXML
+    public void createAppointment() throws IOException {
+        Optional<Appointment> appointmentOpt = appointmentCreate(true, true);
+        if (appointmentOpt.isPresent()) {
+            Appointment appointment = appointmentOpt.get();
+            CreateAppointmentDTO createAppointment = new CreateAppointmentDTO();
+            createAppointment.setDate(appointment.getDate().toString());
+            createAppointment.setTime(appointment.getTime().toString());
+            createAppointment.setServiceId(appointment.getService().getId());
+            createAppointment.setUserId(appointment.getUser().getId());
+
+            //Confirm
+            User user = appointment.getUser();
+            String content = Util.getString("text.makeAppointmentQuestion") + "\n\n" +
+                    "• " + Util.getString("text.date") + ": " + appointment.getDate() + "\n" +
+                    "• " + Util.getString("text.hour") + ": " + appointment.getTime() + "\n" +
+                    "• " + Util.getString("text.service") + ": " + appointment.getService().getName() + "\n" +
+                    "• " + Util.getString("text.username") + ": " + user.getUsername() + " (" + user.getName() + " " + user.getSurname() + ")\n\n";
+
+            if (Util.confirmDeleteAlert(Util.getString("text.create"), content)) {
+                Appointment inserted = APIRestConfig.getAppointmentsService().insertAppointments(APIRestConfig.token, createAppointment).execute().body();
+                if (inserted != null && APIRestConfig.getAppointmentsService().appointmentGetById(APIRestConfig.token, inserted.getId()) != null) {
+                    Util.popUpAlert(Util.getString("title.info"), Util.getString("text.appointmentCreated"), Alert.AlertType.INFORMATION);
+                } else {
+                    String moreInfo = getErrorAppointment(appointment);
+                    Util.popUpAlert(Util.getString("title.error"), Util.getString("error.appointmentNotCreated") + "\n" + moreInfo, Alert.AlertType.ERROR);
+                }
             }
         }
     }
 
-    private int[] calculateLastDayPosition(Calendar calendar, int firstDayIndex) {
-        Calendar lastDayOfMonth = Calendar.getInstance();
-        lastDayOfMonth.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.getActualMaximum(Calendar.DATE));
-        int nRows = 0;
-        if ((firstDayIndex + calendar.getActualMaximum(Calendar.DATE))%7 == 0)
-            nRows = (firstDayIndex + calendar.getActualMaximum(Calendar.DATE))/7;
-        else
-            nRows = (firstDayIndex + calendar.getActualMaximum(Calendar.DATE))/7 + 1;
-
-        if (lastDayOfMonth.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-            return new int[]{ 6, nRows};
+    private String getErrorAppointment(Appointment appointment) throws IOException {
+        LocalDate localDate = appointment.getDate();
+        LocalTime dateTime = hourViewController.getActualTime();
+        Util.getLeftStock(appointment);
+        if (localDate.isBefore(LocalDate.now()) || (dateTime.isBefore(LocalTime.now()) && localDate.isEqual(LocalDate.now()))) {
+            return Util.getString("error.oldDateTime");
+        } else {
+            if (Util.getLeftStock(appointment) <= 0) {
+                return Util.getString("error.noStockService");
+            } else {
+                //TODO: else que comprueba: if (appointment.getUser().getAppointments().stream().anyMatch(a -> a.getDate().equals(appointment.getDate()) && a.getTime().equals(appointment.getTime()))) {
+                return "";
+            }
         }
-        else {
-            return new int[]{lastDayOfMonth.get(Calendar.DAY_OF_WEEK) - 2, nRows};
+    }
+
+    /**
+     * Return an appointment if can be created
+     * pop up an alert if appointment can't be created
+     *
+     * @return Optional Appointment present if can be created
+     */
+    private Optional<Appointment> appointmentCreate(boolean alert, boolean userDepends) throws IOException {
+        Optional<Appointment> appointment = Optional.empty();
+        Optional<String> date = getDate(alert);
+        Optional<String> time = Optional.empty();
+        Optional<User> user = Optional.empty();
+        Optional<Service> service = getService(alert);
+        if (date.isPresent()) {
+            time = getTime(alert);
+            if (time.isPresent()) {
+                user = getUser(alert);
+            }
         }
+
+        //User condition set
+        boolean userCondition = user.isPresent();
+        if (!userDepends) {
+            userCondition = true;
+        }
+
+        //Set values
+        if (date.isPresent() && time.isPresent() && userCondition && service.isPresent()) {
+            Appointment ap = new Appointment();
+            ap.setId(UUID.randomUUID().toString());
+            ap.setDate(LocalDate.parse(date.get()));
+            ap.setTime(LocalTime.parse(time.get()));
+            ap.setService(service.get());
+            user.ifPresent(ap::setUser);
+            appointment = Optional.of(ap);
+        }
+        return appointment;
     }
 
-    private int calculateFirstDayPosition(Calendar calendar) {
-        Calendar firstDayOfMonth = Calendar.getInstance();
-        firstDayOfMonth.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
-        if (firstDayOfMonth.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) return 6;
-        else return firstDayOfMonth.get(Calendar.DAY_OF_WEEK) - 2;
+    private Optional<String> getTime(boolean alert) {
+        Optional<String> str = hourViewController.getActualTimeString();
+        if (alert && str.isEmpty()) {
+            Util.popUpAlert(Util.getString("title.info"), Util.getString("error.noTimeSet"), Alert.AlertType.INFORMATION);
+        }
+        return str;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        gridButtons.add(List.of(day_button_0_0, day_button_0_1, day_button_0_2, day_button_0_3, day_button_0_4, day_button_0_5, day_button_0_6));
-        gridButtons.add(List.of(day_button_1_0, day_button_1_1, day_button_1_2, day_button_1_3, day_button_1_4, day_button_1_5, day_button_1_6));
-        gridButtons.add(List.of(day_button_2_0, day_button_2_1, day_button_2_2, day_button_2_3, day_button_2_4, day_button_2_5, day_button_2_6));
-        gridButtons.add(List.of(day_button_3_0, day_button_3_1, day_button_3_2, day_button_3_3, day_button_3_4, day_button_3_5, day_button_3_6));
-        gridButtons.add(List.of(day_button_4_0, day_button_4_1, day_button_4_2, day_button_4_3, day_button_4_4, day_button_4_5, day_button_4_6));
-        gridButtons.add(List.of(day_button_5_0, day_button_5_1, day_button_5_2, day_button_5_3, day_button_5_4, day_button_5_5, day_button_5_6));
-        setButtonNamesForMonthYear(calendar);
-        updateMonthYearLabel();
+    private Optional<String> getDate(boolean alert) {
+        Optional<String> str = calendarViewController.getActualDateString();
+        if (str.isEmpty()) {
+            if (alert) {
+                Util.popUpAlert(Util.getString("title.info"), Util.getString("error.noDateSet"), Alert.AlertType.INFORMATION);
+            }
+        }
+        return str;
     }
 
-    private void updateMonthYearLabel() {
-        DateFormat monthFormat = new SimpleDateFormat("MMMM", Locale.getDefault());
-        month_string.setText(monthFormat.format(calendar.getTime()));
-        year_string.setText(calendar.get(Calendar.YEAR) + "");
+    /**
+     * Return a Service if set and exist
+     * Pop up an alert if it doesn't exist
+     *
+     * @param alert Alert Enabled
+     * @return Optional Present if service exists
+     */
+    private Optional<Service> getService(boolean alert) {
+        Optional<Service> service = Optional.empty();
+        if (services.isEmpty()) {
+            if (alert) {
+                Util.popUpAlert(Util.getString("title.info"), Util.getString("text.noServices"), Alert.AlertType.INFORMATION);
+            }
+        } else {
+            service = Optional.of(services.get(actualServiceSelected));
+        }
+        return service;
     }
 
-    @FXML
-    public void nextMonthButtonAction() {
-        if (calendar.get(Calendar.MONTH)== Calendar.DECEMBER)
-            calendar.set(calendar.get(Calendar.YEAR) + 1, Calendar.JANUARY, calendar.get(Calendar.DAY_OF_MONTH));
-        else
-            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
-        setButtonNamesForMonthYear(calendar);
-        updateMonthYearLabel();
+    /**
+     * Return a User if set and exist
+     * Pop up an alert if it doesn't exist
+     *
+     * @param alert Alert Enabled
+     * @return Optional Present if user exists
+     */
+    private Optional<User> getUser(boolean alert) throws IOException {
+        Optional<User> userOpt = Optional.empty();
+        Optional<String> errorMsg = Optional.empty();
+
+        if (usernameField.getText().isEmpty()) {
+            errorMsg = Optional.of(Util.getString("error.userNotSet"));
+        } else {
+            User user = APIRestConfig.getUsersService().findByUsername(APIRestConfig.token, usernameField.getText()).execute().body();
+            if (user == null) {
+                errorMsg = Optional.of(Util.getString("error.userNotFound") + "\n" + getUserSuggestionsMsg());
+            } else {
+                userOpt = Optional.of(user);
+            }
+        }
+
+        //Show alert if error msg and return result
+        errorMsg.ifPresent(e -> {
+            if (alert) {
+                Util.popUpAlert(Util.getString("title.info"), e, Alert.AlertType.INFORMATION);
+            }
+        });
+        return userOpt;
     }
 
-    @FXML
-    public void prevMonthButtonAction() {
-        if (calendar.get(Calendar.MONTH)== Calendar.JANUARY)
-            calendar.set(calendar.get(Calendar.YEAR) - 1, Calendar.DECEMBER, calendar.get(Calendar.DAY_OF_MONTH));
-        else
-            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) - 1, calendar.get(Calendar.DAY_OF_MONTH));
-        setButtonNamesForMonthYear(calendar);
-        updateMonthYearLabel();
+    /**
+     * Return user suggestions (empty String if any suggestion)
+     *
+     * @return User suggestions
+     * @throws IOException Input/Output exception
+     */
+    private String getUserSuggestionsMsg() throws IOException {
+        int limit = 10;
+        StringBuilder usersSuggestionMsg = new StringBuilder();
+        List<User> usersSuggestions = APIRestConfig.getUsersService()
+                .userGetAllWithUser_name(APIRestConfig.token, usernameField.getText()).execute().body();
+        if (usersSuggestions != null && !usersSuggestions.isEmpty()) {
+            usersSuggestionMsg.append("\n").append(Util.getString("text.userSuggestions")).append("\n");
+
+            int size = usersSuggestions.size();
+            if (size > limit) {
+                size = limit;
+            }
+
+            for (int n = 0; n < size; n++) {
+                User user = usersSuggestions.get(n);
+                usersSuggestionMsg.append(user.getUsername()).append(" (")
+                        .append(user.getName()).append(" ").append(user.getSurname()).append(")").append("\n");
+            }
+        }
+        return usersSuggestionMsg.toString();
     }
 
-    public void setUserSearch(String userSearch) {
-        this.userSearch = userSearch;
-        appointmentsTableViewController.setSearchUser(userSearch);
-        appointmentsTableViewController.refreshTable();
-    }
-
-    @FXML
-    public void onCalendarDayAction (ActionEvent event) {
-        System.out.println("Button pressed");
-        LocalDate date = LocalDate.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, Integer.parseInt(((Button)event.getSource()).getText()));
-        System.out.println("REST petition with date " + date);
-//		APIRestConfig.getAppointmentsService().appointmentGetAllWithDate(Date.from(Instant.from(date)));
-//		try {
-//			Response<List<AppointmentDTO>> response = APIRestConfig.getAppointmentsService().appointmentsGetAll().execute();
-//			if (response.body() != null) {
-//				listAppointmentDTO = FXCollections.observableList(response.body());
-//				list_view_appointments.setItems(listAppointmentDTO);
-//				list_view_appointments.setCellFactory(new AppointmentCellFactory());
-//			}else {
-//				System.out.println("F");
-//			}
-//		} catch (Exception e) {
-//			System.err.println("Cagaste");
-//			e.printStackTrace();
-//		}
+    /**
+     * Set te search query
+     *
+     * @param searchQuery search query
+     */
+    public void setSearchQuery(String searchQuery) {
+        tableViewController.setSearchQuery(searchQuery);
     }
 }

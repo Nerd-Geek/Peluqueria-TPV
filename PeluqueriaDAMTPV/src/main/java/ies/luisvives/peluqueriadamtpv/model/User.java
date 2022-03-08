@@ -2,8 +2,11 @@ package ies.luisvives.peluqueriadamtpv.model;
 
 import lombok.*;
 
+import java.util.Set;
+
 @Data
-public class User {
+@NoArgsConstructor
+public class User implements TableEntity{
     private String id;
     private String image;
     private boolean superUser;
@@ -13,5 +16,7 @@ public class User {
     private String surname;
     private String phoneNumber;
     private String email;
+    private String token;
     private UserGender gender;
+    private Set<UserRoles> userRoles;
 }
